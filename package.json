@@ -1,6 +1,7 @@
 {
   "name": "gitfolio",
   "version": "1.0.0",
+  "packageManager": "bun@1.4.0",
   "description": "Git contribution portfolio exporter — scan repos, pick an author, export diffs to markdown",
   "main": "./out/main/index.js",
   "scripts": {
