@@ -10,8 +10,8 @@ describe('renderer layout styles', () => {
     expect(css).toMatch(/\.app-main\s*\{[^}]*overflow:\s*auto;/s)
   })
 
-  test('lets the author phase scroll instead of clipping content', () => {
-    expect(css).toMatch(/\.phase-screen-fill\s*\{[^}]*min-height:\s*100%;/s)
+  test('uses a flexible phase screen for the main content area', () => {
+    expect(css).toMatch(/\.phase-screen\s*\{[^}]*flex:\s*1;/s)
   })
 
   test('keeps author controls in a dedicated sticky command bar inside the author pane', () => {
@@ -27,8 +27,10 @@ describe('renderer layout styles', () => {
     expect(app).not.toContain('className="selection-preview"')
   })
 
-  test('moves folder context into the author work pane', () => {
-    expect(app).toContain('className="table-context-row"')
+  test('renders a persistent context panel for workspace stats', () => {
+    expect(app).toContain('className="context-panel"')
+    expect(app).toContain('className="context-stats"')
+    expect(css).toMatch(/\.context-panel\s*\{[^}]*display:\s*flex;/s)
   })
 
   test('uses one unified sticky command bar for author controls', () => {
@@ -39,8 +41,13 @@ describe('renderer layout styles', () => {
   })
 
   test('keeps the top phase strip visually compact', () => {
-    expect(css).toMatch(/\.phase-item\s*\{[^}]*min-height:\s*56px;/s)
+    expect(css).toMatch(/\.phase-item\s*\{[^}]*white-space:\s*nowrap;/s)
     expect(app).not.toMatch(/className=\{`phase-item phase-item-\$\{state\}`\}[\s\S]*phaseMeta\[item\]\.detail/)
+  })
+
+  test('renders a footer status bar during active operations', () => {
+    expect(app).toContain('className="app-footer"')
+    expect(css).toMatch(/\.app-footer\s*\{[^}]*display:\s*flex;/s)
   })
 
   test('uses the approved warm editorial palette tokens', () => {
