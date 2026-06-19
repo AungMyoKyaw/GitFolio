@@ -7,6 +7,7 @@ export interface AuthorInfo {
   name: string
   email: string
   commitCount: number
+  repoCount: number
 }
 
 export interface RecentSelection {
