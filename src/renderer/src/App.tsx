@@ -503,116 +503,97 @@ function AuthorPickPhase({
   const totalCommits = selectedAuthors.reduce((sum, author) => sum + author.commitCount, 0)
 
   return (
-    <section className="phase-screen phase-screen-fill">
-      <div className="author-layout">
-        <div className="surface-card summary-card">
-          <span className="eyebrow">Selection scope</span>
-          <h2>Review authors before export</h2>
-          <p>
-            Filter identities, keep the ones you want to attribute, then export one consolidated
-            markdown file.
-          </p>
-
-          <div className="stats-grid">
-            <StatCard label="Selected" value={String(selectedCount)} accent />
-            <StatCard label="Authors" value={String(totalAuthors)} />
-            <StatCard label="Commits" value={totalCommits.toLocaleString()} />
-            <StatCard label="Repositories" value={String(repos.length)} />
+    <section className="phase-screen">
+      <div className="surface-card author-card">
+        <div className="table-command-bar">
+          <div className="table-command-copy">
+            <span className="eyebrow">Author index</span>
+            <strong>{authors.length === totalAuthors ? 'All discovered authors' : 'Filtered authors'}</strong>
+            <span className="table-command-meta">
+              {selectedCount === 0
+                ? 'Choose at least one author to enable export.'
+                : `${selectedCount} authors selected · ${totalCommits.toLocaleString()} commits ready`}
+            </span>
           </div>
 
+          <div className="table-command-controls">
+            <label className="table-context-row" aria-label="Selected folder">
+              <span className="table-context-label">Folder</span>
+              <code>{folderPath}</code>
+            </label>
+
+            <div className="search-wrap">
+              <input
+                type="text"
+                placeholder="Search by name or email"
+                value={search}
+                onChange={(e) => onSearchChange(e.target.value)}
+                autoFocus
+              />
+            </div>
+
+            <div className="action-row table-action-row">
+              <button className="btn-secondary" onClick={onBack}>
+                Back
+              </button>
+            </div>
+          </div>
         </div>
 
-        <div className="surface-card table-card">
-          <div className="table-command-bar">
-            <div className="table-command-copy">
-              <span className="eyebrow">Author index</span>
-              <strong>{authors.length === totalAuthors ? 'All discovered authors' : 'Filtered authors'}</strong>
-              <span className="table-command-meta">
-                {selectedCount === 0
-                  ? 'Choose at least one author to enable export.'
-                  : `${selectedCount} authors selected · ${totalCommits.toLocaleString()} commits ready`}
-              </span>
+        <div className="table-frame">
+          {authors.length === 0 ? (
+            <div className="empty-state">
+              <strong>No authors found</strong>
+              <span>Try a different search or rescan another folder.</span>
             </div>
+          ) : (
+            <table>
+              <thead>
+                <tr>
+                  <th aria-label="selected" />
+                  <th>Name</th>
+                  <th>Email</th>
+                  <th className="numeric-cell">Repos</th>
+                  <th className="numeric-cell">Commits</th>
+                </tr>
+              </thead>
+              <tbody>
+                {authors.map((author) => {
+                  const key = authorKey(author)
+                  const isSelected = selectedKeys.has(key)
 
-            <div className="table-command-controls">
-              <label className="table-context-row" aria-label="Selected folder">
-                <span className="table-context-label">Folder</span>
-                <code>{folderPath}</code>
-              </label>
-
-              <div className="search-wrap">
-                <input
-                  type="text"
-                  placeholder="Search by name or email"
-                  value={search}
-                  onChange={(e) => onSearchChange(e.target.value)}
-                  autoFocus
-                />
-              </div>
-
-              <div className="action-row table-action-row">
-                <button className="btn-secondary" onClick={onBack}>
-                  Back
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div className="table-frame">
-            {authors.length === 0 ? (
-              <div className="empty-state">
-                <strong>No authors found</strong>
-                <span>Try a different search or rescan another folder.</span>
-              </div>
-            ) : (
-              <table>
-                <thead>
-                  <tr>
-                    <th aria-label="selected" />
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th className="numeric-cell">Repos</th>
-                    <th className="numeric-cell">Commits</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {authors.map((author) => {
-                    const key = authorKey(author)
-                    const isSelected = selectedKeys.has(key)
-
-                    return (
-                      <tr
-                        key={key}
-                        className={isSelected ? 'table-row-selected' : undefined}
-                        onClick={() => onToggle(key)}
-                      >
-                        <td className="checkbox-cell">
-                          <input
-                            type="checkbox"
-                            checked={isSelected}
-                            onChange={() => onToggle(key)}
-                            onClick={(e) => e.stopPropagation()}
-                          />
-                        </td>
-                        <td>
-                          <div className="author-name-cell">
-                            <strong>{author.name}</strong>
-                          </div>
-                        </td>
-                        <td className="muted-cell">{author.email}</td>
-                        <td className="numeric-cell muted-cell">
-                          {author.repoCount.toLocaleString()}
-                        </td>
-                        <td className="numeric-cell muted-cell">
-                          {author.commitCount.toLocaleString()}
-                        </td>
-                      </tr>
-                    )
-                  })}
-                </tbody>
-              </table>
-            )}
-          </div>
+                  return (
+                    <tr
+                      key={key}
+                      className={isSelected ? 'table-row-selected' : undefined}
+                      onClick={() => onToggle(key)}
+                    >
+                      <td className="checkbox-cell">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={() => onToggle(key)}
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                      </td>
+                      <td>
+                        <div className="author-name-cell">
+                          <strong>{author.name}</strong>
+                        </div>
+                      </td>
+                      <td className="muted-cell">{author.email}</td>
+                      <td className="numeric-cell muted-cell">
+                        {author.repoCount.toLocaleString()}
+                      </td>
+                      <td className="numeric-cell muted-cell">
+                        {author.commitCount.toLocaleString()}
+                      </td>
+                    </tr>
+                  )
+                })}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
     </section>

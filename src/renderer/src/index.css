@@ -578,6 +578,15 @@ code {
   color: var(--text-muted);
 }
 
+.author-card {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
 .author-layout {
   display: grid;
   grid-template-columns: minmax(300px, 360px) minmax(0, 1fr);
@@ -708,12 +717,24 @@ code {
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-bottom: 16px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-md);
+  flex-shrink: 0;
+  border-bottom: 1px solid var(--border);
   background: rgba(29, 24, 21, 0.96);
-  padding: 12px;
+  padding: 16px;
   backdrop-filter: blur(8px);
+}
+
+.table-frame {
+  min-height: 0;
+  flex: 1;
+  overflow: auto;
+  background: var(--background);
+}
+
+.table-card {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
 }
 
 .table-command-copy {
@@ -779,8 +800,6 @@ code {
   min-height: 0;
   flex: 1;
   overflow: auto;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
   background: var(--background);
 }
 
