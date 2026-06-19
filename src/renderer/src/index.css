@@ -117,14 +117,19 @@ code {
   flex-direction: column;
   height: 100%;
   padding: 24px;
-  gap: 16px;
+  gap: 12px;
 }
 
 .app-header {
   display: flex;
+  align-items: center;
   justify-content: space-between;
   gap: 16px;
-  flex-wrap: wrap;
+  flex-shrink: 0;
+}
+
+.brand-block {
+  flex-shrink: 0;
 }
 
 .eyebrow {
@@ -156,29 +161,10 @@ code {
   margin-top: 8px;
 }
 
-.header-phase-card,
 .surface-card {
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   background: var(--surface);
-}
-
-.header-phase-card {
-  display: flex;
-  min-width: 240px;
-  max-width: 320px;
-  flex-direction: column;
-  gap: 4px;
-  padding: 16px;
-}
-
-.header-phase-card strong {
-  font-size: 16px;
-}
-
-.header-phase-card span:last-child {
-  color: var(--text-muted);
-  font-size: 13px;
 }
 
 .phase-chip {
@@ -195,24 +181,26 @@ code {
 }
 
 .phase-strip {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 8px;
+  display: flex;
+  gap: 6px;
+  flex: 1;
+  justify-content: flex-end;
 }
 
 .phase-item {
   display: flex;
   align-items: center;
-  gap: 10px;
-  min-height: 56px;
+  gap: 8px;
   border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-md);
   background: var(--surface);
-  padding: 10px 12px;
+  padding: 7px 12px;
+  white-space: nowrap;
 }
 
 .phase-item strong {
-  font-size: 13px;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .phase-item-active {
@@ -220,7 +208,19 @@ code {
   background: linear-gradient(180deg, rgba(217, 164, 65, 0.12), rgba(29, 24, 21, 1));
 }
 
-.phase-item-complete .phase-index,
+.phase-item-complete {
+  border-color: var(--border);
+  background: var(--surface);
+}
+
+.phase-item-complete .phase-index {
+  color: var(--accent);
+}
+
+.phase-item-complete strong {
+  color: var(--text-muted);
+}
+
 .phase-item-active .phase-index {
   color: var(--accent);
 }
@@ -245,9 +245,155 @@ code {
 }
 
 .app-main {
+  display: flex;
+  flex-direction: column;
   min-height: 0;
-  flex: 1;
   overflow: auto;
+}
+
+.app-body {
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 16px;
+  flex: 1;
+  min-height: 0;
+}
+
+.context-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--surface);
+  padding: 16px;
+  overflow: auto;
+}
+
+.context-workspace {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.context-path {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.context-path strong {
+  font-size: 13px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.context-path-full {
+  color: var(--text-muted);
+  font-size: 11px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.context-empty {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.context-stats {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+}
+
+.context-stat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  background: var(--background);
+}
+
+.context-stat + .context-stat {
+  border-top: 1px solid var(--border);
+}
+
+.context-stat-label {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.context-stat-value {
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+
+.context-stat-active .context-stat-value {
+  color: var(--accent);
+}
+
+.context-export-btn {
+  width: 100%;
+  margin-top: auto;
+  padding: 10px 16px;
+}
+
+.app-footer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  padding: 10px 14px;
+}
+
+.footer-label {
+  flex-shrink: 0;
+  min-width: 140px;
+}
+
+.footer-progress-track {
+  width: 160px;
+  flex-shrink: 0;
+  height: 4px;
+  border-radius: var(--radius-lg);
+  background: var(--surface-raised);
+  overflow: hidden;
+}
+
+.footer-progress-fill {
+  height: 100%;
+  border-radius: var(--radius-lg);
+  background: var(--accent);
+  transition: width 0.2s ease;
+}
+
+.footer-item {
+  flex: 1;
+  font-size: 13px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: var(--text);
+}
+
+.footer-meta {
+  flex-shrink: 0;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-variant-numeric: tabular-nums;
 }
 
 .phase-screen {
