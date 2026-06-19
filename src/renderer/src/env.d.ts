@@ -18,6 +18,8 @@ declare global {
       exportContributions: (options: ExportOptions) => Promise<void>
       getRecentSelections: () => Promise<RecentSelection[]>
       saveRecentSelection: (selection: RecentSelection) => Promise<void>
+      openFile: (path: string) => Promise<void>
+      showInFolder: (path: string) => Promise<void>
       onProgress: (callback: (event: ProgressEvent) => void) => () => void
     }
   }
