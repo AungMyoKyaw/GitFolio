@@ -362,7 +362,7 @@ function FolderPickPhase({
             merge author identities, and set up the export workflow.
           </p>
           <div className="hero-actions">
-            <button className="btn-primary btn-large" onClick={onPick}>
+            <button className="btn-primary btn-large" onClick={() => onPick()}>
               Choose Folder
             </button>
           </div>
