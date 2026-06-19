@@ -12,11 +12,24 @@ describe('renderer layout styles', () => {
 
   test('uses a flexible phase screen for the main content area', () => {
     expect(css).toMatch(/\.phase-screen\s*\{[^}]*flex:\s*1;/s)
+    expect(css).toMatch(/\.phase-screen\s*\{[^}]*min-height:\s*0;/s)
   })
 
   test('keeps author controls in a dedicated sticky command bar inside the author pane', () => {
     expect(app).toContain('className="table-command-bar"')
     expect(css).toMatch(/\.table-command-bar\s*\{[^}]*position:\s*sticky;/s)
+  })
+
+  test('uses a denser sticky command bar layout so filters stay visible without consuming excess height', () => {
+    expect(css).toMatch(/\.table-command-bar\s*\{[^}]*padding:\s*12px 16px;/s)
+    expect(css).toMatch(/\.table-command-controls\s*\{[^}]*display:\s*grid;/s)
+    expect(css).toMatch(/\.table-command-controls\s*\{[^}]*grid-template-columns:\s*minmax\(260px, 1fr\) auto;/s)
+  })
+
+  test('gives the sticky command bar stronger pinned separation styling', () => {
+    expect(css).toMatch(/\.table-command-bar\s*\{[^}]*background:\s*rgba\(29, 24, 21, 0\.98\);/s)
+    expect(css).toMatch(/\.table-command-bar\s*\{[^}]*box-shadow:\s*0 10px 24px rgba\(0, 0, 0, 0\.18\);/s)
+    expect(css).toMatch(/\.table-command-bar\s*\{[^}]*backdrop-filter:\s*blur\(12px\);/s)
   })
 
   test('does not keep the primary author actions in the scrolling summary card', () => {

@@ -401,6 +401,7 @@ code {
   display: flex;
   flex-direction: column;
   flex: 1;
+  min-height: 0;
   gap: 16px;
 }
 
@@ -789,12 +790,13 @@ code {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 12px;
   flex-shrink: 0;
   border-bottom: 1px solid var(--border);
-  background: rgba(29, 24, 21, 0.96);
-  padding: 16px;
-  backdrop-filter: blur(8px);
+  background: rgba(29, 24, 21, 0.98);
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.18);
+  padding: 12px 16px;
+  backdrop-filter: blur(12px);
 }
 
 .table-frame {
@@ -814,29 +816,30 @@ code {
   display: flex;
   min-width: 0;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
 }
 
 .table-command-copy strong {
-  font-size: 20px;
+  font-size: 18px;
 }
 
 .table-command-meta {
   color: var(--text-muted);
-  font-size: 13px;
+  font-size: 12px;
 }
 
 .table-command-controls {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(260px, 1fr) auto;
   min-width: 0;
-  align-items: stretch;
+  align-items: center;
   justify-content: flex-end;
-  gap: 12px;
-  flex-direction: column;
+  gap: 10px 12px;
 }
 
 .table-context-row {
   display: flex;
+  grid-column: 1 / -1;
   min-width: 220px;
   align-items: center;
   gap: 12px;
@@ -863,11 +866,11 @@ code {
 
 .table-action-row {
   flex-shrink: 0;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 
 .search-wrap {
-  width: min(420px, 100%);
+  width: auto;
 }
 
 .table-frame {
