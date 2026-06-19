@@ -85,6 +85,16 @@ describe('renderer layout styles', () => {
     expect(app).toContain('<button className="btn-secondary" onClick={onReset}>')
   })
 
+  test('gives the done phase a dedicated wide layout inside the main content area', () => {
+    expect(app).toContain('className="phase-screen phase-screen-done"')
+    expect(app).toContain('className="done-lede"')
+    expect(app).toContain('className="done-summary"')
+    expect(css).toMatch(/\.phase-screen-done\s*\{[^}]*align-items:\s*stretch;/s)
+    expect(css).toMatch(/\.phase-screen-done\s*\{[^}]*justify-content:\s*flex-start;/s)
+    expect(css).toMatch(/\.phase-screen-done\s*\{[^}]*padding-top:\s*48px;/s)
+    expect(css).toMatch(/\.done-card\s*\{[^}]*width:\s*min\(1120px, 100%\);/s)
+  })
+
   test('keeps the landing hero free of redundant marketing sidecar copy', () => {
     expect(app).not.toContain('Dark, dense, fast')
     expect(app).not.toContain('Terminal-inspired dark mode')

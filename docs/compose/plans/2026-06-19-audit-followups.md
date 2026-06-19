@@ -16,7 +16,7 @@
 - Modify: `tests/renderer/layout.test.ts`
 - Modify: `tests/main/git/authors.test.ts`
 
-- [ ] **Step 1: Write the failing renderer assertions**
+- [x] **Step 1: Write the failing renderer assertions**
 
 ```ts
 test('renders grouped author affordances and makes Open File the primary done action', () => {
@@ -31,12 +31,12 @@ test('dims completed phase items and brightens muted body copy', () => {
 })
 ```
 
-- [ ] **Step 2: Run the renderer test file and confirm failure**
+- [x] **Step 2: Run the renderer test file and confirm failure**
 
 Run: `bun test tests/renderer/layout.test.ts`
 Expected: FAIL because grouped rows and updated CTA styling do not exist yet.
 
-- [ ] **Step 3: Write the failing author aggregation assertion**
+- [x] **Step 3: Write the failing author aggregation assertion**
 
 ```ts
 expect(result[0]).toMatchObject({
@@ -48,7 +48,7 @@ expect(result[0]).toMatchObject({
 })
 ```
 
-- [ ] **Step 4: Run the author test file and confirm failure**
+- [x] **Step 4: Run the author test file and confirm failure**
 
 Run: `bun test tests/main/git/authors.test.ts`
 Expected: FAIL because `AuthorInfo` does not yet expose grouped identities.
@@ -61,7 +61,7 @@ Expected: FAIL because `AuthorInfo` does not yet expose grouped identities.
 - Modify: `src/main/git/exporter.ts`
 - Modify: `src/renderer/src/App.tsx`
 
-- [ ] **Step 1: Extend the shared types for grouped identities and current target labels**
+- [x] **Step 1: Extend the shared types for grouped identities and current target labels**
 
 ```ts
 export interface AuthorIdentity {
@@ -88,7 +88,7 @@ export interface ProgressEvent {
 }
 ```
 
-- [ ] **Step 2: Update author aggregation to group by normalized name while retaining child identities**
+- [x] **Step 2: Update author aggregation to group by normalized name while retaining child identities**
 
 ```ts
 const groups = new Map<string, { name: string; commitCount: number; repoPaths: Set<string>; identities: Map<string, AuthorIdentity> }>()
@@ -97,7 +97,7 @@ const groupKey = name.toLowerCase()
 const identityKey = `${name.toLowerCase()}|${email.toLowerCase()}`
 ```
 
-- [ ] **Step 3: Keep export behavior compatible by flattening grouped selections to emails**
+- [x] **Step 3: Keep export behavior compatible by flattening grouped selections to emails**
 
 ```ts
 const selectedEmails = new Set(
@@ -105,7 +105,7 @@ const selectedEmails = new Set(
 )
 ```
 
-- [ ] **Step 4: Replace the flat author table with expandable grouped rows and use progress target text in the scan/export placeholder**
+- [x] **Step 4: Replace the flat author table with expandable grouped rows and use progress target text in the scan/export placeholder**
 
 ```tsx
 <OperationPlaceholder
@@ -126,7 +126,7 @@ const selectedEmails = new Set(
 </tr>
 ```
 
-- [ ] **Step 5: Run the focused renderer and author tests**
+- [x] **Step 5: Run the focused renderer and author tests**
 
 Run: `bun test tests/renderer/layout.test.ts tests/main/git/authors.test.ts`
 Expected: PASS
@@ -137,7 +137,7 @@ Expected: PASS
 - Modify: `src/renderer/src/index.css`
 - Modify: `src/renderer/src/App.tsx`
 
-- [ ] **Step 1: Dim completed steps, brighten muted text, and make the done-screen primary action match the audit**
+- [x] **Step 1: Dim completed steps, brighten muted text, and make the done-screen primary action match the audit**
 
 ```css
 .phase-item-complete {
@@ -155,12 +155,12 @@ Expected: PASS
 </button>
 ```
 
-- [ ] **Step 2: Run the renderer suite**
+- [x] **Step 2: Run the renderer suite**
 
 Run: `bun test tests/renderer/layout.test.ts`
 Expected: PASS
 
-- [ ] **Step 3: Run the full project verification command**
+- [x] **Step 3: Run the full project verification command**
 
 Run: `bun test`
 Expected: PASS

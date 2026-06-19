@@ -409,9 +409,24 @@ code {
   justify-content: center;
 }
 
+.phase-screen-done {
+  align-items: stretch;
+  justify-content: flex-start;
+  padding-top: 48px;
+}
+
 .hero-card,
 .done-card {
   padding: 32px;
+}
+
+.done-card {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+  width: min(1120px, 100%);
+  margin: 0;
+  padding: 48px;
 }
 
 .hero-card {
@@ -422,7 +437,7 @@ code {
 .progress-card h2,
 .summary-card h2,
 .done-card h2 {
-  font-size: 28px;
+  font-size: 38px;
   line-height: 1.15;
   margin-top: 8px;
 }
@@ -653,7 +668,7 @@ code {
 
 .stat-card strong {
   display: block;
-  font-size: 22px;
+  font-size: 26px;
   margin-top: 4px;
 }
 
@@ -702,28 +717,63 @@ code {
 .done-header {
   display: flex;
   align-items: flex-start;
-  gap: 16px;
-  margin-bottom: 4px;
+  gap: 24px;
+  margin-bottom: 0;
 }
 
 .done-check {
-  font-size: 32px;
+  font-size: 52px;
   color: var(--accent);
   line-height: 1;
-  margin-top: 6px;
+  margin-top: 4px;
   flex-shrink: 0;
+}
+
+.done-lede {
+  margin-top: 0;
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.done-summary {
+  max-width: 760px;
+  font-size: 17px;
+  line-height: 1.7;
 }
 
 .done-stats-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
+  gap: 18px;
+  margin-top: 0;
+}
+
+.done-card .stat-card {
+  padding: 16px;
+}
+
+.done-card .stat-card span {
+  font-size: 13px;
+  letter-spacing: 0.02em;
+  text-transform: none;
+}
+
+.done-card .stat-card strong {
+  font-size: 28px;
 }
 
 .done-actions {
   display: flex;
-  gap: 8px;
+  gap: 12px;
   flex-wrap: wrap;
+  margin-top: 0;
+}
+
+.done-card .path-block {
+  padding: 16px 18px;
 }
 
 .table-card {

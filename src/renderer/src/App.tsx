@@ -696,23 +696,38 @@ function DonePhase({
   }
 
   return (
-    <section className="phase-screen phase-screen-centered">
+    <section className="phase-screen phase-screen-done">
       <div className="done-card surface-card">
         <div className="done-header">
           <span className="done-check">✓</span>
           <div>
-            <span className="eyebrow">Export complete</span>
+            <p className="done-lede">Export complete</p>
             <h2>Markdown portfolio generated</h2>
+            <p className="done-summary">
+              Processed {exportedRepos.toLocaleString()} repositories across{' '}
+              {exportedAuthors.toLocaleString()} authors and assembled{' '}
+              {exportedCommits.toLocaleString()} commits into one markdown portfolio.
+            </p>
           </div>
         </div>
 
         <div className="done-stats-grid">
-          <StatCard label="Repositories" value={exportedRepos.toLocaleString()} />
-          <StatCard label="Authors" value={exportedAuthors.toLocaleString()} accent />
-          <StatCard label="Commits" value={exportedCommits.toLocaleString()} />
           <StatCard
-            label="Time"
-            value={exportDuration !== null ? formatDuration(exportDuration) : '—'}
+            label={formatCountLabel(exportedRepos, 'Repository', 'Repositories')}
+            value={exportedRepos.toLocaleString()}
+          />
+          <StatCard
+            label={formatCountLabel(exportedAuthors, 'Author', 'Authors')}
+            value={exportedAuthors.toLocaleString()}
+            accent
+          />
+          <StatCard
+            label={formatCountLabel(exportedCommits, 'Commit', 'Commits')}
+            value={exportedCommits.toLocaleString()}
+          />
+          <StatCard
+            label={exportDuration !== null && exportDuration < 1000 ? 'Generated' : 'Duration'}
+            value={exportDuration !== null ? formatDoneDuration(exportDuration) : '—'}
           />
         </div>
 
@@ -746,6 +761,22 @@ function formatDuration(ms: number): string {
   const min = Math.floor(sec / 60)
   const rem = sec % 60
   return rem > 0 ? `${min}m ${rem}s` : `${min}m`
+}
+
+function formatDoneDuration(ms: number): string {
+  const sec = Math.round(ms / 1000)
+  if (sec <= 0) return 'Instantly'
+  if (sec === 1) return '1 Second'
+  if (sec < 60) return `${sec} Seconds`
+
+  const min = Math.floor(sec / 60)
+  const rem = sec % 60
+  if (rem === 0) return `${min} ${min === 1 ? 'Minute' : 'Minutes'}`
+  return `${min}m ${rem}s`
+}
+
+function formatCountLabel(count: number, singular: string, plural: string) {
+  return count === 1 ? singular : plural
 }
 
 function StatCard({
