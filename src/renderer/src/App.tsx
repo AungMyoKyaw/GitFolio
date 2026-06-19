@@ -341,9 +341,19 @@ function ContextPanel({
   )
 }
 
-function FolderPickPhase({ onPick }: { onPick: () => void }) {
+function FolderPickPhase({
+  onPick,
+  recentSelections,
+  onPickRecent
+}: {
+  onPick: () => void
+  recentSelections: RecentSelection[]
+  onPickRecent: (path: string) => void
+}) {
+  const sorted = [...recentSelections].sort((a, b) => b.timestamp - a.timestamp).slice(0, 5)
+
   return (
-    <section className="phase-screen phase-screen-centered">
+    <section className="phase-screen">
       <div className="hero-card surface-card">
         <div className="hero-copy">
           <span className="eyebrow">Phase 01</span>
@@ -356,13 +366,44 @@ function FolderPickPhase({ onPick }: { onPick: () => void }) {
             <button className="btn-primary btn-large" onClick={onPick}>
               Choose Folder
             </button>
-            <div className="hint-block">
-              <strong>Expected flow</strong>
-              <span>{'Pick folder -> scan repos -> select authors -> export markdown'}</span>
-            </div>
           </div>
         </div>
       </div>
+
+      {sorted.length > 0 ? (
+        <div className="recent-workspaces surface-card">
+          <span className="eyebrow">Recent Workspaces</span>
+          <ul className="recent-list">
+            {sorted.map((sel) => {
+              const name = sel.folderPath.split('/').pop() || sel.folderPath
+              const date = new Date(sel.timestamp).toLocaleDateString()
+              return (
+                <li
+                  key={sel.folderPath}
+                  className="recent-item"
+                  onClick={() => onPickRecent(sel.folderPath)}
+                >
+                  <div className="recent-item-info">
+                    <strong>{name}</strong>
+                    <code>{sel.folderPath}</code>
+                  </div>
+                  <span className="recent-item-date">{date}</span>
+                </li>
+              )
+            })}
+          </ul>
+        </div>
+      ) : (
+        <div className="feature-list surface-card">
+          <span className="eyebrow">What GitFolio does</span>
+          <ul className="checklist">
+            <li>Find all repositories in a workspace folder</li>
+            <li>Extract and merge author identities across repos</li>
+            <li>Let you select which authors to include</li>
+            <li>Generate a single consolidated markdown portfolio</li>
+          </ul>
+        </div>
+      )}
     </section>
   )
 }
