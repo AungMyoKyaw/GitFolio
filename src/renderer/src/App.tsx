@@ -619,23 +619,65 @@ function AuthorPickPhase({
   )
 }
 
-function DonePhase({ outputPath, onReset }: { outputPath: string; onReset: () => void }) {
+function DonePhase({
+  outputPath,
+  exportedRepos,
+  exportedAuthors,
+  exportedCommits,
+  exportDuration,
+  onReset
+}: {
+  outputPath: string
+  exportedRepos: number
+  exportedAuthors: number
+  exportedCommits: number
+  exportDuration: number | null
+  onReset: () => void
+}) {
+  const [copied, setCopied] = useState(false)
+
+  const handleCopyPath = async () => {
+    await navigator.clipboard.writeText(outputPath)
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
   return (
     <section className="phase-screen phase-screen-centered">
       <div className="done-card surface-card">
-        <span className="eyebrow">Export complete</span>
-        <h2>Markdown portfolio generated</h2>
-        <p>
-          GitFolio finished exporting the selected contribution history. The resulting markdown file
-          is ready at the path below.
-        </p>
+        <div className="done-header">
+          <span className="done-check">✓</span>
+          <div>
+            <span className="eyebrow">Export complete</span>
+            <h2>Markdown portfolio generated</h2>
+          </div>
+        </div>
+
+        <div className="done-stats-grid">
+          <StatCard label="Repositories" value={exportedRepos.toLocaleString()} />
+          <StatCard label="Authors" value={exportedAuthors.toLocaleString()} accent />
+          <StatCard label="Commits" value={exportedCommits.toLocaleString()} />
+          <StatCard
+            label="Time"
+            value={exportDuration !== null ? formatDuration(exportDuration) : '—'}
+          />
+        </div>
 
         <div className="path-block">
           <span>Output path</span>
           <code>{outputPath}</code>
         </div>
 
-        <div className="action-row action-row-centered">
+        <div className="done-actions">
+          <button className="btn-secondary" onClick={() => window.api.openFile(outputPath)}>
+            Open File
+          </button>
+          <button className="btn-secondary" onClick={() => window.api.showInFolder(outputPath)}>
+            Open Folder
+          </button>
+          <button className="btn-secondary" onClick={handleCopyPath}>
+            {copied ? 'Copied!' : 'Copy Path'}
+          </button>
           <button className="btn-primary" onClick={onReset}>
             Start Over
           </button>
@@ -643,6 +685,14 @@ function DonePhase({ outputPath, onReset }: { outputPath: string; onReset: () =>
       </div>
     </section>
   )
+}
+
+function formatDuration(ms: number): string {
+  const sec = Math.round(ms / 1000)
+  if (sec < 60) return `${sec}s`
+  const min = Math.floor(sec / 60)
+  const rem = sec % 60
+  return rem > 0 ? `${min}m ${rem}s` : `${min}m`
 }
 
 function StatCard({
