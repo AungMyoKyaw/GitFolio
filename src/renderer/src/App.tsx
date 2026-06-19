@@ -1,4 +1,5 @@
-import { useEffect, useRef, useState } from 'react'
+import { Fragment, useEffect, useRef, useState } from 'react'
+import type { Dispatch, SetStateAction } from 'react'
 import type { AuthorInfo, ProgressEvent, RecentSelection, RepoInfo } from '../../shared/types'
 
 type Phase = 'pick-folder' | 'scanning' | 'pick-authors' | 'exporting' | 'done'
@@ -40,6 +41,7 @@ export default function App() {
   const [authors, setAuthors] = useState<AuthorInfo[]>([])
   const [selectedKeys, setSelectedKeys] = useState<Set<string>>(new Set())
   const [search, setSearch] = useState('')
+  const [expandedGroups, setExpandedGroups] = useState<Set<string>>(new Set())
   const [progress, setProgress] = useState<ProgressEvent | null>(null)
   const [outputPath, setOutputPath] = useState('')
   const [error, setError] = useState('')
@@ -147,6 +149,7 @@ export default function App() {
     setAuthors([])
     setSelectedKeys(new Set())
     setSearch('')
+    setExpandedGroups(new Set())
     setProgress(null)
     setOutputPath('')
     setError('')
@@ -222,6 +225,8 @@ export default function App() {
             <OperationPlaceholder
               phaseLabel="Repository discovery"
               title="Scanning for git histories"
+              currentLabel="Current repository"
+              currentValue={getOperationTarget(progress, 'scanning')}
             />
           )}
           {phase === 'pick-authors' && (
@@ -233,8 +238,11 @@ export default function App() {
               selectedAuthors={selectedAuthors}
               selectedKeys={selectedKeys}
               search={search}
+              expandedGroups={expandedGroups}
               onSearchChange={setSearch}
               onToggle={toggleAuthor}
+              onToggleGroup={(group) => toggleAuthorGroup(group, setSelectedKeys)}
+              onToggleExpand={(groupKey) => toggleGroupExpanded(groupKey, setExpandedGroups)}
               onBack={reset}
             />
           )}
@@ -242,6 +250,8 @@ export default function App() {
             <OperationPlaceholder
               phaseLabel="Markdown assembly"
               title="Exporting contribution portfolio"
+              currentLabel="Current repository"
+              currentValue={getOperationTarget(progress, 'exporting')}
             />
           )}
           {phase === 'done' && (
@@ -409,10 +419,14 @@ function FolderPickPhase({
 
 function OperationPlaceholder({
   phaseLabel,
-  title
+  title,
+  currentLabel,
+  currentValue
 }: {
   phaseLabel: string
   title: string
+  currentLabel: string
+  currentValue: string
 }) {
   return (
     <div className="operation-placeholder">
@@ -420,6 +434,10 @@ function OperationPlaceholder({
       <div>
         <span className="eyebrow">{phaseLabel}</span>
         <h2>{title}</h2>
+      </div>
+      <div className="operation-current-card surface-card">
+        <span className="operation-current-label">{currentLabel}</span>
+        <strong className="operation-current-value">{currentValue}</strong>
       </div>
     </div>
   )
@@ -482,8 +500,11 @@ interface AuthorPickPhaseProps {
   selectedAuthors: AuthorInfo[]
   selectedKeys: Set<string>
   search: string
+  expandedGroups: Set<string>
   onSearchChange: (value: string) => void
   onToggle: (key: string) => void
+  onToggleGroup: (group: DisplayAuthorGroup) => void
+  onToggleExpand: (groupKey: string) => void
   onBack: () => void
 }
 
@@ -495,12 +516,17 @@ function AuthorPickPhase({
   selectedAuthors,
   selectedKeys,
   search,
+  expandedGroups,
   onSearchChange,
   onToggle,
+  onToggleGroup,
+  onToggleExpand,
   onBack
 }: AuthorPickPhaseProps) {
   const selectedCount = selectedAuthors.length
   const totalCommits = selectedAuthors.reduce((sum, author) => sum + author.commitCount, 0)
+  const authorGroups = groupAuthors(authors, selectedKeys)
+  const groupLabel = authorGroups.length === totalAuthors ? 'All discovered authors' : 'Filtered authors'
 
   return (
     <section className="phase-screen">
@@ -508,7 +534,7 @@ function AuthorPickPhase({
         <div className="table-command-bar">
           <div className="table-command-copy">
             <span className="eyebrow">Author index</span>
-            <strong>{authors.length === totalAuthors ? 'All discovered authors' : 'Filtered authors'}</strong>
+            <strong>{groupLabel}</strong>
             <span className="table-command-meta">
               {selectedCount === 0
                 ? 'Choose at least one author to enable export.'
@@ -552,43 +578,89 @@ function AuthorPickPhase({
                 <tr>
                   <th aria-label="selected" />
                   <th>Name</th>
-                  <th>Email</th>
+                  <th>Identity</th>
                   <th className="numeric-cell">Repos</th>
                   <th className="numeric-cell">Commits</th>
                 </tr>
               </thead>
               <tbody>
-                {authors.map((author) => {
-                  const key = authorKey(author)
-                  const isSelected = selectedKeys.has(key)
+                {authorGroups.map((group) => {
+                  const isExpanded = expandedGroups.has(group.key)
 
                   return (
-                    <tr
-                      key={key}
-                      className={isSelected ? 'table-row-selected' : undefined}
-                      onClick={() => onToggle(key)}
-                    >
-                      <td className="checkbox-cell">
-                        <input
-                          type="checkbox"
-                          checked={isSelected}
-                          onChange={() => onToggle(key)}
-                          onClick={(e) => e.stopPropagation()}
-                        />
-                      </td>
-                      <td>
-                        <div className="author-name-cell">
-                          <strong>{author.name}</strong>
-                        </div>
-                      </td>
-                      <td className="muted-cell">{author.email}</td>
-                      <td className="numeric-cell muted-cell">
-                        {author.repoCount.toLocaleString()}
-                      </td>
-                      <td className="numeric-cell muted-cell">
-                        {author.commitCount.toLocaleString()}
-                      </td>
-                    </tr>
+                    <Fragment key={group.key}>
+                      <tr
+                        className={`author-group-row${group.selectedCount > 0 ? ' table-row-selected' : ''}`}
+                        onClick={() => onToggleGroup(group)}
+                      >
+                        <td className="checkbox-cell">
+                          <input
+                            type="checkbox"
+                            checked={group.selectedCount === group.identities.length}
+                            onChange={() => onToggleGroup(group)}
+                            onClick={(e) => e.stopPropagation()}
+                          />
+                        </td>
+                        <td>
+                          <div className="author-name-cell author-group-cell">
+                            {group.identities.length > 1 ? (
+                              <button
+                                className="tree-toggle"
+                                type="button"
+                                onClick={(e) => {
+                                  e.stopPropagation()
+                                  onToggleExpand(group.key)
+                                }}
+                              >
+                                {isExpanded ? '▾' : '▸'}
+                              </button>
+                            ) : (
+                              <span className="tree-toggle-placeholder" />
+                            )}
+                            <div>
+                              <strong>{group.name}</strong>
+                              <span className="author-group-meta">
+                                {group.identities.length > 1
+                                  ? `${group.identities.length} identities`
+                                  : '1 identity'}
+                              </span>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="muted-cell">{group.summary}</td>
+                        <td className="numeric-cell muted-cell">{group.repoCount.toLocaleString()}</td>
+                        <td className="numeric-cell muted-cell">{group.commitCount.toLocaleString()}</td>
+                      </tr>
+
+                      {isExpanded && group.identities.length > 1 && (
+                        <tr className="identity-row">
+                          <td />
+                          <td colSpan={4}>
+                            <div className="identity-list">
+                              {group.identities.map((author) => {
+                                const key = authorKey(author)
+                                const isSelected = selectedKeys.has(key)
+
+                                return (
+                                  <label key={key} className="identity-item">
+                                    <input
+                                      type="checkbox"
+                                      checked={isSelected}
+                                      onChange={() => onToggle(key)}
+                                    />
+                                    <span>{author.email}</span>
+                                    <span className="identity-item-meta">
+                                      {author.repoCount.toLocaleString()} repos ·{' '}
+                                      {author.commitCount.toLocaleString()} commits
+                                    </span>
+                                  </label>
+                                )
+                              })}
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </Fragment>
                   )
                 })}
               </tbody>
@@ -650,7 +722,7 @@ function DonePhase({
         </div>
 
         <div className="done-actions">
-          <button className="btn-secondary" onClick={() => window.api.openFile(outputPath)}>
+          <button className="btn-primary" onClick={() => window.api.openFile(outputPath)}>
             Open File
           </button>
           <button className="btn-secondary" onClick={() => window.api.showInFolder(outputPath)}>
@@ -659,7 +731,7 @@ function DonePhase({
           <button className="btn-secondary" onClick={handleCopyPath}>
             {copied ? 'Copied!' : 'Copy Path'}
           </button>
-          <button className="btn-primary" onClick={onReset}>
+          <button className="btn-secondary" onClick={onReset}>
             Start Over
           </button>
         </div>
@@ -704,4 +776,95 @@ function getPhaseState(target: Phase, current: Phase) {
 
 function authorKey(author: AuthorInfo) {
   return `${author.name}|${author.email}`
+}
+
+interface DisplayAuthorGroup {
+  key: string
+  name: string
+  identities: AuthorInfo[]
+  commitCount: number
+  repoCount: number
+  selectedCount: number
+  summary: string
+}
+
+function groupAuthors(authors: AuthorInfo[], selectedKeys: Set<string>): DisplayAuthorGroup[] {
+  const groups = new Map<string, DisplayAuthorGroup>()
+
+  for (const author of authors) {
+    const key = author.name.trim().toLowerCase()
+    const existing = groups.get(key)
+    if (existing) {
+      existing.identities.push(author)
+      existing.commitCount += author.commitCount
+      existing.repoCount += author.repoCount
+      if (selectedKeys.has(authorKey(author))) existing.selectedCount += 1
+    } else {
+      groups.set(key, {
+        key,
+        name: author.name,
+        identities: [author],
+        commitCount: author.commitCount,
+        repoCount: author.repoCount,
+        selectedCount: selectedKeys.has(authorKey(author)) ? 1 : 0,
+        summary: author.email
+      })
+    }
+  }
+
+  return Array.from(groups.values())
+    .map((group) => ({
+      ...group,
+      identities: [...group.identities].sort((a, b) => b.commitCount - a.commitCount),
+      summary:
+        group.identities.length > 1
+          ? `${group.identities[0].email} +${group.identities.length - 1} more`
+          : group.identities[0].email
+    }))
+    .sort((a, b) => b.commitCount - a.commitCount)
+}
+
+function toggleAuthorGroup(
+  group: DisplayAuthorGroup,
+  setSelectedKeys: Dispatch<SetStateAction<Set<string>>>
+) {
+  setSelectedKeys((prev) => {
+    const next = new Set(prev)
+    const keys = group.identities.map(authorKey)
+    const allSelected = keys.every((key) => next.has(key))
+
+    for (const key of keys) {
+      if (allSelected) next.delete(key)
+      else next.add(key)
+    }
+
+    return next
+  })
+}
+
+function toggleGroupExpanded(
+  groupKey: string,
+  setExpandedGroups: Dispatch<SetStateAction<Set<string>>>
+) {
+  setExpandedGroups((prev) => {
+    const next = new Set(prev)
+    if (next.has(groupKey)) next.delete(groupKey)
+    else next.add(groupKey)
+    return next
+  })
+}
+
+function getOperationTarget(progress: ProgressEvent | null, phase: Phase): string {
+  const message = progress?.message?.trim()
+  if (!message) {
+    return phase === 'scanning' ? 'Preparing workspace...' : 'Preparing export...'
+  }
+
+  const scanMatch = message.match(/Scanning authors in (.+)$/)
+  if (scanMatch) return scanMatch[1]
+
+  const exportMatch = message.match(/Exporting from (.+?)(?:\u2026)?$/)
+  if (exportMatch) return exportMatch[1]
+
+  return message
 }

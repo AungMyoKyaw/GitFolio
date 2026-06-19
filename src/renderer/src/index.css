@@ -10,7 +10,7 @@
   --surface-raised: #28211d;
   --border: #3a302a;
   --text: #f3eadb;
-  --text-muted: #b6a792;
+  --text-muted: #c4b6a2;
   --accent: #d9a441;
   --accent-hover: #e4b65c;
   --accent-tint: #2d2419;
@@ -211,6 +211,7 @@ code {
 .phase-item-complete {
   border-color: var(--border);
   background: var(--surface);
+  opacity: 0.8;
 }
 
 .phase-item-complete .phase-index {
@@ -532,9 +533,31 @@ code {
   align-items: center;
   justify-content: center;
   flex: 1;
-  gap: 16px;
+  gap: 20px;
   text-align: center;
   padding: 32px;
+}
+
+.operation-current-card {
+  min-width: min(520px, 100%);
+  padding: 20px 24px;
+}
+
+.operation-current-label {
+  display: block;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.operation-current-value {
+  display: block;
+  margin-top: 8px;
+  font-size: 28px;
+  line-height: 1.15;
+  word-break: break-word;
 }
 
 .pulse-dot {
@@ -756,10 +779,10 @@ code {
 .table-command-controls {
   display: flex;
   min-width: 0;
-  align-items: center;
+  align-items: stretch;
   justify-content: flex-end;
   gap: 12px;
-  flex-wrap: wrap;
+  flex-direction: column;
 }
 
 .table-context-row {
@@ -790,10 +813,11 @@ code {
 
 .table-action-row {
   flex-shrink: 0;
+  justify-content: flex-end;
 }
 
 .search-wrap {
-  width: min(280px, 100%);
+  width: min(420px, 100%);
 }
 
 .table-frame {
@@ -859,6 +883,66 @@ tbody td {
 
 .author-name-cell strong {
   color: var(--text);
+}
+
+.author-group-row {
+  background: rgba(243, 234, 219, 0.015);
+}
+
+.author-group-cell {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.author-group-meta {
+  display: block;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.tree-toggle,
+.tree-toggle-placeholder {
+  width: 20px;
+  flex-shrink: 0;
+}
+
+.tree-toggle {
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  padding: 0;
+}
+
+.tree-toggle:hover {
+  color: var(--text);
+}
+
+.tree-toggle-placeholder {
+  display: inline-block;
+}
+
+.identity-row td {
+  padding-top: 0;
+}
+
+.identity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 0 0 12px 30px;
+}
+
+.identity-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text);
+}
+
+.identity-item-meta {
+  color: var(--text-muted);
+  font-size: 12px;
 }
 
 .table-row-selected .author-name-cell strong {

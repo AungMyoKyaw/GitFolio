@@ -50,18 +50,39 @@ describe('renderer layout styles', () => {
     expect(css).toMatch(/\.app-footer\s*\{[^}]*display:\s*flex;/s)
   })
 
+  test('uses a richer operation placeholder with live activity context', () => {
+    expect(app).toContain('currentLabel="Current repository"')
+    expect(app).toContain('className="operation-current-label"')
+    expect(app).toContain('className="operation-current-value"')
+  })
+
+  test('renders grouped author rows with child identity rows', () => {
+    expect(app).toContain('author-group-row')
+    expect(app).toContain('className="identity-row"')
+    expect(app).toContain('className="identity-list"')
+  })
+
   test('uses the approved warm editorial palette tokens', () => {
     expect(css).toContain('--background: #14110f;')
     expect(css).toContain('--surface: #1d1815;')
     expect(css).toContain('--surface-raised: #28211d;')
     expect(css).toContain('--border: #3a302a;')
     expect(css).toContain('--text: #f3eadb;')
-    expect(css).toContain('--text-muted: #b6a792;')
+    expect(css).toContain('--text-muted: #c4b6a2;')
     expect(css).toContain('--accent: #d9a441;')
     expect(css).toContain('--accent-hover: #e4b65c;')
     expect(css).toContain('--accent-tint: #2d2419;')
     expect(css).toContain('--error: #e0625b;')
     expect(css).toContain('--error-bg: #341512;')
+  })
+
+  test('dims completed steps so the current step carries more emphasis', () => {
+    expect(css).toMatch(/\.phase-item-complete\s*\{[^}]*opacity:\s*0\.8;/s)
+  })
+
+  test('makes Open File the primary action on the completion screen', () => {
+    expect(app).toContain('<button className="btn-primary" onClick={() => window.api.openFile(outputPath)}>')
+    expect(app).toContain('<button className="btn-secondary" onClick={onReset}>')
   })
 
   test('keeps the landing hero free of redundant marketing sidecar copy', () => {
