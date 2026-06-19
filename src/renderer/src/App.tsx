@@ -408,44 +408,70 @@ function FolderPickPhase({
   )
 }
 
-function ProgressPhase({
-  progress,
+function OperationPlaceholder({
   phaseLabel,
-  title,
-  detail
+  title
 }: {
-  progress: ProgressEvent | null
   phaseLabel: string
   title: string
-  detail: string
+}) {
+  return (
+    <div className="operation-placeholder">
+      <div className="pulse-dot" />
+      <div>
+        <span className="eyebrow">{phaseLabel}</span>
+        <h2>{title}</h2>
+      </div>
+    </div>
+  )
+}
+
+function FooterStatusBar({
+  phase,
+  progress,
+  elapsed
+}: {
+  phase: Phase
+  progress: ProgressEvent | null
+  elapsed: number
 }) {
   const current = progress?.current ?? 0
   const total = progress?.total ?? 0
   const pct = total > 0 ? Math.round((current / total) * 100) : 0
 
+  const elapsedSec = Math.floor(elapsed / 1000)
+  const elapsedStr =
+    elapsedSec >= 60
+      ? `${Math.floor(elapsedSec / 60)}m ${elapsedSec % 60}s`
+      : `${elapsedSec}s`
+
+  const etaSec =
+    current > 5 && elapsed > 0
+      ? Math.round(((elapsed / current) * (total - current)) / 1000)
+      : null
+  const etaStr =
+    etaSec !== null
+      ? etaSec >= 60
+        ? `${Math.floor(etaSec / 60)}m ${etaSec % 60}s`
+        : `${etaSec}s`
+      : null
+
+  const label = phase === 'scanning' ? 'Scanning repositories' : 'Exporting portfolio'
+
   return (
-    <section className="phase-screen phase-screen-centered">
-      <div className="progress-card surface-card">
-        <span className="eyebrow">{phaseLabel}</span>
-        <h2>{title}</h2>
-        <p>{detail}</p>
-
-        <div className="progress-track" aria-hidden="true">
-          <div className="progress-fill" style={{ width: `${pct}%` }} />
-        </div>
-
-        <div className="progress-meta-row">
-          <strong>{progress?.message ?? 'Working...'}</strong>
-          <span>{pct}%</span>
-        </div>
-
-        <div className="progress-stats-grid">
-          <StatCard label="Processed" value={String(current)} />
-          <StatCard label="Total" value={String(total)} />
-          <StatCard label="Phase" value={progress?.phase ?? 'pending'} />
-        </div>
+    <footer className="app-footer">
+      <span className="footer-label eyebrow">{label}</span>
+      <div className="footer-progress-track">
+        <div className="footer-progress-fill" style={{ width: `${pct}%` }} />
       </div>
-    </section>
+      <span className="footer-item">{progress?.message ?? '—'}</span>
+      <span className="footer-meta">
+        {current > 0 && `${current.toLocaleString()} / ${total.toLocaleString()}`}
+        {current > 0 && ` · ${pct}%`}
+        {elapsedSec > 0 && ` · ${elapsedStr}`}
+        {etaStr && ` · ETA ${etaStr}`}
+      </span>
+    </footer>
   )
 }
 
