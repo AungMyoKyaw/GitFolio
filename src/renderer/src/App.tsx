@@ -142,7 +142,6 @@ export default function App() {
           <div className="eyebrow">Desktop contribution exporter</div>
           <div className="brand-row">
             <h1>GitFolio</h1>
-            <span className="brand-tag">Dark, dense, fast</span>
           </div>
           <p className="app-subtitle">
             Scan repositories, isolate author identities, and export a markdown portfolio without
@@ -233,21 +232,6 @@ function FolderPickPhase({ onPick }: { onPick: () => void }) {
               <strong>Expected flow</strong>
               <span>{'Pick folder -> scan repos -> select authors -> export markdown'}</span>
             </div>
-          </div>
-        </div>
-
-        <div className="hero-panel">
-          <div className="hero-panel-row">
-            <span>Interface</span>
-            <strong>Terminal-inspired dark mode</strong>
-          </div>
-          <div className="hero-panel-row">
-            <span>Selection memory</span>
-            <strong>Recent author picks restored per folder</strong>
-          </div>
-          <div className="hero-panel-row">
-            <span>Output</span>
-            <strong>Single markdown portfolio file</strong>
           </div>
         </div>
       </div>

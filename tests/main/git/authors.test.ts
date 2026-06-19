@@ -7,7 +7,7 @@ vi.mock('child_process', () => ({
 
 import { getAuthors } from '@main/git/authors'
 
-const mockExecSync = vi.mocked(childProcess.execSync)
+const mockExecSync = childProcess.execSync as unknown as ReturnType<typeof vi.fn>
 
 describe('getAuthors', () => {
   beforeEach(() => {

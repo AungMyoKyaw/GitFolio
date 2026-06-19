@@ -1,10 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import * as fs from 'fs'
 
-vi.mock('fs', async () => {
-  const actual = await vi.importActual<typeof fs>('fs')
+vi.mock('fs', () => {
   return {
-    ...actual,
     readdirSync: vi.fn(),
     statSync: vi.fn()
   }
@@ -12,8 +10,8 @@ vi.mock('fs', async () => {
 
 import { scanRepos } from '@main/git/scanner'
 
-const mockReaddirSync = vi.mocked(fs.readdirSync)
-const mockStatSync = vi.mocked(fs.statSync)
+const mockReaddirSync = fs.readdirSync as unknown as ReturnType<typeof vi.fn>
+const mockStatSync = fs.statSync as unknown as ReturnType<typeof vi.fn>
 
 function directoryStat() {
   return { isDirectory: () => true } as fs.Stats

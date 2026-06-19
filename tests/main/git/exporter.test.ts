@@ -6,18 +6,16 @@ vi.mock('child_process', () => ({
   execSync: vi.fn()
 }))
 
-vi.mock('fs', async () => {
-  const actual = await vi.importActual<typeof fs>('fs')
+vi.mock('fs', () => {
   return {
-    ...actual,
     writeFileSync: vi.fn()
   }
 })
 
 import { exportContributions } from '@main/git/exporter'
 
-const mockExecSync = vi.mocked(childProcess.execSync)
-const mockWriteFileSync = vi.mocked(fs.writeFileSync)
+const mockExecSync = childProcess.execSync as unknown as ReturnType<typeof vi.fn>
+const mockWriteFileSync = fs.writeFileSync as unknown as ReturnType<typeof vi.fn>
 
 describe('exportContributions', () => {
   beforeEach(() => {

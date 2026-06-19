@@ -1,10 +1,8 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 import * as fs from 'fs'
 
-vi.mock('fs', async () => {
-  const actual = await vi.importActual<typeof fs>('fs')
+vi.mock('fs', () => {
   return {
-    ...actual,
     readFileSync: vi.fn(),
     writeFileSync: vi.fn()
   }
@@ -12,8 +10,8 @@ vi.mock('fs', async () => {
 
 import { PrefsStore } from '@main/prefs'
 
-const mockReadFileSync = vi.mocked(fs.readFileSync)
-const mockWriteFileSync = vi.mocked(fs.writeFileSync)
+const mockReadFileSync = fs.readFileSync as unknown as ReturnType<typeof vi.fn>
+const mockWriteFileSync = fs.writeFileSync as unknown as ReturnType<typeof vi.fn>
 
 describe('PrefsStore', () => {
   beforeEach(() => {

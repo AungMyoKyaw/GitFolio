@@ -5,17 +5,17 @@
 }
 
 :root {
-  --background: #0f0f0f;
-  --surface: #1a1a1a;
-  --surface-raised: #242424;
-  --border: #333333;
-  --text: #e8e8e8;
-  --text-muted: #888888;
-  --accent: #4ade80;
-  --accent-hover: #22c55e;
-  --accent-tint: #0f1f0f;
-  --error: #ef4444;
-  --error-bg: #2d0000;
+  --background: #14110f;
+  --surface: #1d1815;
+  --surface-raised: #28211d;
+  --border: #3a302a;
+  --text: #f3eadb;
+  --text-muted: #b6a792;
+  --accent: #d9a441;
+  --accent-hover: #e4b65c;
+  --accent-tint: #2d2419;
+  --error: #e0625b;
+  --error-bg: #341512;
   --radius-sm: 4px;
   --radius-md: 6px;
   --radius-lg: 8px;
@@ -150,15 +150,6 @@ code {
   line-height: 1.2;
 }
 
-.brand-tag {
-  border-radius: 9999px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--accent);
-  padding: 4px 10px;
-  font-size: 12px;
-}
-
 .app-subtitle {
   max-width: 760px;
   color: var(--text-muted);
@@ -226,7 +217,7 @@ code {
 
 .phase-item-active {
   border-color: var(--accent);
-  background: linear-gradient(180deg, rgba(74, 222, 128, 0.08), rgba(26, 26, 26, 1));
+  background: linear-gradient(180deg, rgba(217, 164, 65, 0.12), rgba(29, 24, 21, 1));
 }
 
 .phase-item-complete .phase-index,
@@ -282,9 +273,7 @@ code {
 }
 
 .hero-card {
-  display: grid;
-  grid-template-columns: minmax(0, 1.6fr) minmax(280px, 0.9fr);
-  gap: 24px;
+  display: flex;
 }
 
 .hero-copy h2,
@@ -320,30 +309,6 @@ code {
   font-size: 13px;
 }
 
-.hero-panel {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 12px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  background: var(--surface-raised);
-  padding: 20px;
-}
-
-.hero-panel-row {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-
-.hero-panel-row span {
-  color: var(--text-muted);
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
-
 .progress-card {
   display: flex;
   flex-direction: column;
@@ -355,7 +320,7 @@ code {
   height: 8px;
   overflow: hidden;
   border-radius: var(--radius-lg);
-  background: var(--background);
+  background: var(--surface);
 }
 
 .progress-fill {
@@ -421,7 +386,7 @@ code {
 }
 
 .stat-card-accent {
-  border-color: rgba(74, 222, 128, 0.35);
+  border-color: rgba(217, 164, 65, 0.4);
 }
 
 .stat-card-accent strong {
@@ -479,7 +444,7 @@ code {
   margin-bottom: 16px;
   border: 1px solid var(--border);
   border-radius: var(--radius-md);
-  background: rgba(26, 26, 26, 0.96);
+  background: rgba(29, 24, 21, 0.96);
   padding: 12px;
   backdrop-filter: blur(8px);
 }
@@ -591,7 +556,7 @@ tbody tr {
 }
 
 tbody tr:hover {
-  background: rgba(255, 255, 255, 0.02);
+  background: rgba(243, 234, 219, 0.03);
 }
 
 .table-row-selected {
