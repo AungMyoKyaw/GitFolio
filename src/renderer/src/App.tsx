@@ -235,7 +235,6 @@ export default function App() {
               search={search}
               onSearchChange={setSearch}
               onToggle={toggleAuthor}
-              onExport={handleExport}
               onBack={reset}
             />
           )}
@@ -485,7 +484,6 @@ interface AuthorPickPhaseProps {
   search: string
   onSearchChange: (value: string) => void
   onToggle: (key: string) => void
-  onExport: () => void
   onBack: () => void
 }
 
@@ -499,7 +497,6 @@ function AuthorPickPhase({
   search,
   onSearchChange,
   onToggle,
-  onExport,
   onBack
 }: AuthorPickPhaseProps) {
   const selectedCount = selectedAuthors.length
@@ -557,9 +554,6 @@ function AuthorPickPhase({
                 <button className="btn-secondary" onClick={onBack}>
                   Back
                 </button>
-                <button className="btn-primary" onClick={onExport} disabled={selectedCount === 0}>
-                  Export {selectedCount > 0 ? `(${selectedCount})` : ''}
-                </button>
               </div>
             </div>
           </div>
@@ -577,6 +571,7 @@ function AuthorPickPhase({
                     <th aria-label="selected" />
                     <th>Name</th>
                     <th>Email</th>
+                    <th className="numeric-cell">Repos</th>
                     <th className="numeric-cell">Commits</th>
                   </tr>
                 </thead>
@@ -605,6 +600,9 @@ function AuthorPickPhase({
                           </div>
                         </td>
                         <td className="muted-cell">{author.email}</td>
+                        <td className="numeric-cell muted-cell">
+                          {author.repoCount.toLocaleString()}
+                        </td>
                         <td className="numeric-cell muted-cell">
                           {author.commitCount.toLocaleString()}
                         </td>
