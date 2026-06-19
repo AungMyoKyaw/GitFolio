@@ -1,4 +1,4 @@
-import { app, ipcMain, dialog, BrowserWindow } from 'electron'
+import { app, ipcMain, dialog, shell, BrowserWindow } from 'electron'
 import { scanRepos } from './git/scanner'
 import { getAuthors } from './git/authors'
 import { exportContributions } from './git/exporter'
@@ -45,5 +45,11 @@ export function registerIpcHandlers(win: BrowserWindow): void {
 
   ipcMain.handle('prefs:saveRecentSelection', (_, selection: RecentSelection) => {
     prefs.saveRecentSelection(selection)
+  })
+
+  ipcMain.handle('shell:openFile', (_, path: string) => shell.openPath(path))
+
+  ipcMain.handle('shell:showInFolder', (_, path: string) => {
+    shell.showItemInFolder(path)
   })
 }

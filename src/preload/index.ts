@@ -12,6 +12,10 @@ const api = {
     ipcRenderer.invoke('prefs:getRecentSelections'),
   saveRecentSelection: (selection: RecentSelection): Promise<void> =>
     ipcRenderer.invoke('prefs:saveRecentSelection', selection),
+  openFile: (path: string): Promise<void> =>
+    ipcRenderer.invoke('shell:openFile', path),
+  showInFolder: (path: string): Promise<void> =>
+    ipcRenderer.invoke('shell:showInFolder', path),
   onProgress: (callback: (event: ProgressEvent) => void): (() => void) => {
     const handler = (_: Electron.IpcRendererEvent, event: ProgressEvent) => callback(event)
     ipcRenderer.on('progress', handler)

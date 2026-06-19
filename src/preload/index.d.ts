@@ -1,4 +1,4 @@
-import type { AuthorInfo, ExportOptions, ProgressEvent, RepoInfo } from '../shared/types'
+import type { AuthorInfo, ExportOptions, ProgressEvent, RecentSelection, RepoInfo } from '../shared/types'
 
 declare global {
   interface Window {
@@ -9,6 +9,10 @@ declare global {
       getAuthors: (repoPaths: string[]) => Promise<AuthorInfo[]>
       exportContributions: (options: ExportOptions) => Promise<void>
       onProgress: (callback: (event: ProgressEvent) => void) => () => void
+      getRecentSelections: () => Promise<RecentSelection[]>
+      saveRecentSelection: (selection: RecentSelection) => Promise<void>
+      openFile: (path: string) => Promise<void>
+      showInFolder: (path: string) => Promise<void>
     }
   }
 }
