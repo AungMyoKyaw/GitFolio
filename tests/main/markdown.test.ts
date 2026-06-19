@@ -5,7 +5,7 @@ import { generateMarkdown } from '@main/markdown'
 describe('generateMarkdown', () => {
   it('renders the summary header and repo sections', () => {
     const markdown = generateMarkdown({
-      authors: [{ name: 'Alice', email: 'alice@example.com', commitCount: 2 }],
+      authors: [{ name: 'Alice', email: 'alice@example.com', commitCount: 2, repoCount: 1 }],
       contributions: [
         {
           repoName: 'app',

@@ -7,7 +7,8 @@ export async function getAuthors(
   repoPaths: string[],
   onProgress: ProgressCallback
 ): Promise<AuthorInfo[]> {
-  const authorMap = new Map<string, AuthorInfo>()
+  const authorMap = new Map<string, { name: string; email: string; commitCount: number }>()
+  const authorRepos = new Map<string, Set<string>>()
 
   for (let i = 0; i < repoPaths.length; i++) {
     const repoPath = repoPaths[i]
@@ -40,11 +41,19 @@ export async function getAuthors(
         } else {
           authorMap.set(key, { name, email, commitCount: 1 })
         }
+        const repoSet = authorRepos.get(key) ?? new Set<string>()
+        repoSet.add(repoPath)
+        authorRepos.set(key, repoSet)
       }
     } catch {
       // skip repos that error
     }
   }
 
-  return Array.from(authorMap.values()).sort((a, b) => b.commitCount - a.commitCount)
+  return Array.from(authorMap.entries())
+    .map(([key, author]) => ({
+      ...author,
+      repoCount: authorRepos.get(key)?.size ?? 0
+    }))
+    .sort((a, b) => b.commitCount - a.commitCount)
 }

@@ -38,8 +38,8 @@ describe('exportContributions', () => {
       {
         repoPaths: ['/repos/app'],
         authors: [
-          { name: 'Alice', email: 'alice@example.com', commitCount: 10 },
-          { name: 'Alice', email: 'alice@work.com', commitCount: 4 }
+          { name: 'Alice', email: 'alice@example.com', commitCount: 10, repoCount: 1 },
+          { name: 'Alice', email: 'alice@work.com', commitCount: 4, repoCount: 1 }
         ],
         outputPath: '/tmp/report.md'
       },
@@ -72,7 +72,7 @@ describe('exportContributions', () => {
     await exportContributions(
       {
         repoPaths: ['/repos/app'],
-        authors: [{ name: 'Alice', email: 'alice@example.com', commitCount: 1 }],
+        authors: [{ name: 'Alice', email: 'alice@example.com', commitCount: 1, repoCount: 1 }],
         outputPath: '/tmp/report.md'
       },
       () => {}
