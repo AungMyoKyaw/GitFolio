@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react'
-import type { AuthorInfo, ProgressEvent, RepoInfo } from '../../shared/types'
+import { useEffect, useRef, useState } from 'react'
+import type { AuthorInfo, ProgressEvent, RecentSelection, RepoInfo } from '../../shared/types'
 
 type Phase = 'pick-folder' | 'scanning' | 'pick-authors' | 'exporting' | 'done'
 
@@ -43,15 +43,38 @@ export default function App() {
   const [progress, setProgress] = useState<ProgressEvent | null>(null)
   const [outputPath, setOutputPath] = useState('')
   const [error, setError] = useState('')
+  const [recentSelections, setRecentSelections] = useState<RecentSelection[]>([])
+  const [exportedRepos, setExportedRepos] = useState(0)
+  const [exportedAuthors, setExportedAuthors] = useState(0)
+  const [exportedCommits, setExportedCommits] = useState(0)
+  const [exportDuration, setExportDuration] = useState<number | null>(null)
+  const opStartTime = useRef<number | null>(null)
+  const [elapsed, setElapsed] = useState(0)
 
   useEffect(() => window.api.onProgress(setProgress), [])
 
-  const handlePickFolder = async () => {
-    const path = await window.api.openFolder()
+  useEffect(() => {
+    window.api.getRecentSelections().then(setRecentSelections)
+  }, [])
+
+  useEffect(() => {
+    if (phase !== 'scanning' && phase !== 'exporting') {
+      setElapsed(0)
+      return
+    }
+    const interval = setInterval(() => {
+      setElapsed(opStartTime.current ? Date.now() - opStartTime.current : 0)
+    }, 500)
+    return () => clearInterval(interval)
+  }, [phase])
+
+  const handlePickFolder = async (overridePath?: string) => {
+    const path = overridePath ?? (await window.api.openFolder())
     if (!path) return
 
     setError('')
     setProgress(null)
+    opStartTime.current = Date.now()
     setPhase('scanning')
 
     try {
@@ -62,8 +85,9 @@ export default function App() {
       const foundAuthors = await window.api.getAuthors(foundRepos.map((repo) => repo.path))
       setAuthors(foundAuthors)
 
-      const recentSelections = await window.api.getRecentSelections()
-      const match = recentSelections.find((item) => item.folderPath === path)
+      const recentSels = await window.api.getRecentSelections()
+      setRecentSelections(recentSels)
+      const match = recentSels.find((item) => item.folderPath === path)
       setSelectedKeys(new Set(match?.authorKeys ?? []))
       setPhase('pick-authors')
     } catch (e) {
@@ -86,11 +110,15 @@ export default function App() {
 
     setError('')
     setProgress(null)
+    opStartTime.current = Date.now()
+
+    const selected = authors.filter((author) => selectedKeys.has(authorKey(author)))
+    setExportedRepos(repos.length)
+    setExportedAuthors(selected.length)
+    setExportedCommits(selected.reduce((sum, a) => sum + a.commitCount, 0))
     setPhase('exporting')
 
     try {
-      const selected = authors.filter((author) => selectedKeys.has(authorKey(author)))
-
       await window.api.saveRecentSelection({
         folderPath,
         authorKeys: selected.map(authorKey),
@@ -103,6 +131,7 @@ export default function App() {
         outputPath: savePath
       })
 
+      setExportDuration(Date.now() - (opStartTime.current ?? Date.now()))
       setOutputPath(savePath)
       setPhase('done')
     } catch (e) {
@@ -121,6 +150,11 @@ export default function App() {
     setProgress(null)
     setOutputPath('')
     setError('')
+    setExportedRepos(0)
+    setExportedAuthors(0)
+    setExportedCommits(0)
+    setExportDuration(null)
+    opStartTime.current = null
   }
 
   const filteredAuthors = authors.filter((author) => {
@@ -133,39 +167,30 @@ export default function App() {
   })
 
   const selectedAuthors = authors.filter((author) => selectedKeys.has(authorKey(author)))
-  const currentMeta = phaseMeta[phase]
 
   return (
     <div className="app-shell">
       <header className="app-header">
-        <div>
+        <div className="brand-block">
           <div className="eyebrow">Desktop contribution exporter</div>
           <div className="brand-row">
             <h1>GitFolio</h1>
           </div>
-          <p className="app-subtitle">
-            Scan repositories, isolate author identities, and export a markdown portfolio without
-            leaving your local machine.
-          </p>
         </div>
-        <div className="header-phase-card">
-          <div className="phase-chip phase-chip-active">Step {currentMeta.step}</div>
-          <strong>{currentMeta.title}</strong>
-          <span>{currentMeta.detail}</span>
-        </div>
+        <nav className="phase-strip" aria-label="Workflow progress">
+          {phaseOrder.map((item, index) => {
+            const state = getPhaseState(item, phase)
+            return (
+              <div key={item} className={`phase-item phase-item-${state}`}>
+                <span className="phase-index">
+                  {state === 'complete' ? '✓' : `0${index + 1}`}
+                </span>
+                <strong>{phaseMeta[item].title}</strong>
+              </div>
+            )
+          })}
+        </nav>
       </header>
-
-      <nav className="phase-strip" aria-label="Workflow progress">
-        {phaseOrder.map((item, index) => {
-          const state = getPhaseState(item, phase)
-          return (
-            <div key={item} className={`phase-item phase-item-${state}`}>
-              <span className="phase-index">0{index + 1}</span>
-              <strong>{phaseMeta[item].title}</strong>
-            </div>
-          )
-        })}
-      </nav>
 
       {error && (
         <div className="error-banner" role="alert">
@@ -174,41 +199,68 @@ export default function App() {
         </div>
       )}
 
-      <main className="app-main">
-        {phase === 'pick-folder' && <FolderPickPhase onPick={handlePickFolder} />}
-        {phase === 'scanning' && (
-          <ProgressPhase
-            progress={progress}
-            phaseLabel="Repository discovery"
-            title="Scanning for git histories"
-            detail="GitFolio is walking the selected folder and indexing each repository before author extraction begins."
-          />
-        )}
-        {phase === 'pick-authors' && (
-          <AuthorPickPhase
-            folderPath={folderPath}
-            repos={repos}
-            authors={filteredAuthors}
-            totalAuthors={authors.length}
-            selectedAuthors={selectedAuthors}
-            selectedKeys={selectedKeys}
-            search={search}
-            onSearchChange={setSearch}
-            onToggle={toggleAuthor}
-            onExport={handleExport}
-            onBack={reset}
-          />
-        )}
-        {phase === 'exporting' && (
-          <ProgressPhase
-            progress={progress}
-            phaseLabel="Markdown assembly"
-            title="Exporting contribution portfolio"
-            detail="GitFolio is collecting commit metadata and diffs into one final markdown document."
-          />
-        )}
-        {phase === 'done' && <DonePhase outputPath={outputPath} onReset={reset} />}
-      </main>
+      <div className="app-body">
+        <ContextPanel
+          phase={phase}
+          folderPath={folderPath}
+          repoCount={repos.length}
+          authorCount={authors.length}
+          selectedCount={selectedAuthors.length}
+          commitCount={selectedAuthors.reduce((sum, a) => sum + a.commitCount, 0)}
+          onExport={handleExport}
+        />
+
+        <main className="app-main">
+          {phase === 'pick-folder' && (
+            <FolderPickPhase
+              onPick={handlePickFolder}
+              recentSelections={recentSelections}
+              onPickRecent={(path) => handlePickFolder(path)}
+            />
+          )}
+          {phase === 'scanning' && (
+            <OperationPlaceholder
+              phaseLabel="Repository discovery"
+              title="Scanning for git histories"
+            />
+          )}
+          {phase === 'pick-authors' && (
+            <AuthorPickPhase
+              folderPath={folderPath}
+              repos={repos}
+              authors={filteredAuthors}
+              totalAuthors={authors.length}
+              selectedAuthors={selectedAuthors}
+              selectedKeys={selectedKeys}
+              search={search}
+              onSearchChange={setSearch}
+              onToggle={toggleAuthor}
+              onExport={handleExport}
+              onBack={reset}
+            />
+          )}
+          {phase === 'exporting' && (
+            <OperationPlaceholder
+              phaseLabel="Markdown assembly"
+              title="Exporting contribution portfolio"
+            />
+          )}
+          {phase === 'done' && (
+            <DonePhase
+              outputPath={outputPath}
+              exportedRepos={exportedRepos}
+              exportedAuthors={exportedAuthors}
+              exportedCommits={exportedCommits}
+              exportDuration={exportDuration}
+              onReset={reset}
+            />
+          )}
+        </main>
+      </div>
+
+      {(phase === 'scanning' || phase === 'exporting') && (
+        <FooterStatusBar phase={phase} progress={progress} elapsed={elapsed} />
+      )}
     </div>
   )
 }
