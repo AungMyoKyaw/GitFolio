@@ -265,6 +265,82 @@ export default function App() {
   )
 }
 
+interface ContextPanelProps {
+  phase: Phase
+  folderPath: string
+  repoCount: number
+  authorCount: number
+  selectedCount: number
+  commitCount: number
+  onExport: () => void
+}
+
+function ContextPanel({
+  phase,
+  folderPath,
+  repoCount,
+  authorCount,
+  selectedCount,
+  commitCount,
+  onExport
+}: ContextPanelProps) {
+  const hasData = phase !== 'pick-folder'
+  const folderName = folderPath ? folderPath.split('/').pop() || folderPath : null
+
+  return (
+    <aside className="context-panel">
+      <div className="context-workspace">
+        <span className="eyebrow">Workspace</span>
+        {folderName ? (
+          <div className="context-path" title={folderPath}>
+            <strong>{folderName}</strong>
+            <code className="context-path-full">{folderPath}</code>
+          </div>
+        ) : (
+          <span className="context-empty">No folder selected</span>
+        )}
+      </div>
+
+      <div className="context-stats">
+        <div className="context-stat">
+          <span className="context-stat-label">Repositories</span>
+          <strong className="context-stat-value">
+            {hasData ? repoCount.toLocaleString() : '—'}
+          </strong>
+        </div>
+        <div className="context-stat">
+          <span className="context-stat-label">Authors</span>
+          <strong className="context-stat-value">
+            {hasData ? authorCount.toLocaleString() : '—'}
+          </strong>
+        </div>
+        <div className={`context-stat${selectedCount > 0 ? ' context-stat-active' : ''}`}>
+          <span className="context-stat-label">Selected</span>
+          <strong className="context-stat-value">
+            {hasData ? selectedCount.toLocaleString() : '—'}
+          </strong>
+        </div>
+        <div className={`context-stat${selectedCount > 0 ? ' context-stat-active' : ''}`}>
+          <span className="context-stat-label">Commits</span>
+          <strong className="context-stat-value">
+            {hasData ? commitCount.toLocaleString() : '—'}
+          </strong>
+        </div>
+      </div>
+
+      {phase === 'pick-authors' && (
+        <button
+          className="btn-primary context-export-btn"
+          onClick={onExport}
+          disabled={selectedCount === 0}
+        >
+          Export Portfolio {selectedCount > 0 ? `(${selectedCount})` : ''}
+        </button>
+      )}
+    </aside>
+  )
+}
+
 function FolderPickPhase({ onPick }: { onPick: () => void }) {
   return (
     <section className="phase-screen phase-screen-centered">
