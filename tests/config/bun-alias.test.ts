@@ -8,13 +8,11 @@ describe('root tsconfig Bun aliases', () => {
       readFileSync(resolve(__dirname, '../../tsconfig.json'), 'utf8')
     ) as {
       compilerOptions?: {
-        baseUrl?: string
         paths?: Record<string, string[]>
       }
     }
 
-    expect(tsconfig.compilerOptions?.baseUrl).toBe('.')
-    expect(tsconfig.compilerOptions?.paths?.['@main/*']).toEqual(['src/main/*'])
-    expect(tsconfig.compilerOptions?.paths?.['@shared/*']).toEqual(['src/shared/*'])
+    expect(tsconfig.compilerOptions?.paths?.['@main/*']).toEqual(['./src/main/*'])
+    expect(tsconfig.compilerOptions?.paths?.['@shared/*']).toEqual(['./src/shared/*'])
   })
 })

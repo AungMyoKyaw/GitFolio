@@ -120,11 +120,11 @@ bun run typecheck
 
 ### Tech stack
 
-- **Desktop shell:** Electron 31
+- **Desktop shell:** Electron 43
 - **Build tool:** electron-vite
-- **Frontend:** React 18 + TypeScript 5
+- **Frontend:** React 19 + TypeScript 6
 - **Package manager:** Bun 1.4.0
-- **Testing:** Vitest
+- **Testing:** Vitest 4
 
 ---
 
