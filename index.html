@@ -1,15 +1,247 @@
 <!doctype html>
-<html>
+<html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>GitFolio</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
-      http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'"
+      name="description"
+      content="GitFolio turns local git history into a Markdown contribution portfolio with commits, diffs, and author identity grouping."
     />
+    <title>GitFolio - Local Git Contribution Portfolio Exporter</title>
+    <link rel="stylesheet" href="website.css" />
   </head>
   <body>
-    <div id="root"></div>
-    <script type="module" src="/src/renderer/src/main.tsx"></script>
+    <div class="site-shell">
+      <header class="site-header" aria-label="Primary navigation">
+        <a class="brand-mark" href="#top" aria-label="GitFolio home">
+          <span class="brand-glyph">GF</span>
+          <span>GitFolio</span>
+        </a>
+        <nav class="site-nav">
+          <a href="#workflow">Workflow</a>
+          <a href="#output">Output</a>
+          <a href="#local-first">Local-first</a>
+          <a href="#install">Install</a>
+        </nav>
+      </header>
+
+      <main id="top">
+        <section class="hero-section" aria-labelledby="hero-title">
+          <div class="hero-copy">
+            <p class="eyebrow">Desktop contribution exporter</p>
+            <h1 id="hero-title">Turn local git history into proof of work</h1>
+            <p class="hero-lede">
+              GitFolio scans your cloned repositories, groups author identities, and exports a readable Markdown portfolio with commits and diffs.
+            </p>
+            <div class="hero-actions" aria-label="Primary actions">
+              <a class="btn btn-primary" href="https://github.com/AungMyoKyaw/GitFolio" rel="noreferrer">View on GitHub</a>
+              <a class="btn btn-secondary" href="#install">Build from source</a>
+            </div>
+            <dl class="hero-facts" aria-label="Product facts">
+              <div>
+                <dt>Output</dt>
+                <dd>Plain Markdown</dd>
+              </div>
+              <div>
+                <dt>Input</dt>
+                <dd>Local cloned repos</dd>
+              </div>
+              <div>
+                <dt>Best for</dt>
+                <dd>Reviews, resumes, recall</dd>
+              </div>
+            </dl>
+          </div>
+
+          <div class="hero-visual" aria-label="GitFolio product preview">
+            <figure class="product-frame product-frame-primary">
+              <img
+                src="docs/screenshots/03-select-authors.png"
+                alt="GitFolio author selection screen showing grouped identities and commit counts"
+              />
+            </figure>
+            <aside class="markdown-preview" aria-label="Markdown output preview">
+              <p class="preview-label">portfolio.md</p>
+              <pre><code># Contribution Report
+
+Total Repos: 12
+Total Commits: 347
+
+## design-system
+2026-06-19 feat: refine export flow
+
+```diff
++ show selected authors
++ cap large generated diffs
+```</code></pre>
+            </aside>
+          </div>
+        </section>
+
+        <section id="problem" class="problem-section section-grid" aria-labelledby="problem-title">
+          <div>
+            <p class="eyebrow">The problem</p>
+            <h2 id="problem-title">Git remembers everything. It does not explain it for you.</h2>
+          </div>
+          <div class="section-copy">
+            <p>
+              Useful work gets spread across repos, emails, branches, teams, and years. When resume,
+              interview, or review season arrives, the evidence is still there, but collecting it by
+              hand turns into archaeology.
+            </p>
+            <p>
+              GitFolio turns that history into one readable artifact without asking you to upload
+              private repositories or rewrite commit logs by hand.
+            </p>
+          </div>
+        </section>
+
+        <section id="workflow" class="content-section" aria-labelledby="workflow-title">
+          <div class="section-heading">
+            <p class="eyebrow">Workflow</p>
+            <h2 id="workflow-title">From folder to contribution packet in four steps</h2>
+          </div>
+          <div class="workflow-grid">
+            <article class="workflow-card">
+              <span class="step-index">01</span>
+              <h3>Pick a workspace</h3>
+              <p>Point GitFolio at a folder that contains your cloned repositories.</p>
+            </article>
+            <article class="workflow-card">
+              <span class="step-index">02</span>
+              <h3>Scan repositories</h3>
+              <p>Find `.git` directories, count histories, and prepare the author index.</p>
+            </article>
+            <article class="workflow-card">
+              <span class="step-index">03</span>
+              <h3>Select identities</h3>
+              <p>Group multiple names and emails so scattered commits can be exported together.</p>
+            </article>
+            <article class="workflow-card">
+              <span class="step-index">04</span>
+              <h3>Export Markdown</h3>
+              <p>Generate a portable report organized by repo, chronology, commits, and diffs.</p>
+            </article>
+          </div>
+          <div class="screenshot-row" aria-label="GitFolio workflow screenshots">
+            <figure>
+              <img src="docs/screenshots/02-scan-repositories.png" alt="GitFolio scanning repositories" />
+              <figcaption>Scan local repositories</figcaption>
+            </figure>
+            <figure>
+              <img src="docs/screenshots/03-select-authors.png" alt="GitFolio selecting author identities" />
+              <figcaption>Select author identities</figcaption>
+            </figure>
+            <figure>
+              <img src="docs/screenshots/05-complete.png" alt="GitFolio export completion screen" />
+              <figcaption>Open the exported portfolio</figcaption>
+            </figure>
+          </div>
+        </section>
+
+        <section id="output" class="output-section section-grid" aria-labelledby="output-title">
+          <div>
+            <p class="eyebrow">The artifact</p>
+            <h2 id="output-title">A Markdown portfolio that keeps the evidence close</h2>
+            <p>
+              The final file is designed for reading, editing, and sharing only after you decide what
+              belongs in the packet.
+            </p>
+          </div>
+          <div class="output-card">
+            <div class="output-meta">
+              <span>12 repos</span>
+              <span>347 commits</span>
+              <span>2024-2026</span>
+            </div>
+            <pre><code>## Repo: api-gateway
+
+### 2026-06-19 - a14f09c
+feat: add contribution export summary
+
+#### src/exporter.ts
+```diff
++ const selectedCommits = commits.filter(matchesAuthor)
++ writeMarkdownReport(selectedCommits, outputPath)
+```
+
+Generated files, binaries, and oversized diffs are skipped or capped.</code></pre>
+          </div>
+        </section>
+
+        <section id="local-first" class="trust-section" aria-labelledby="trust-title">
+          <div class="section-heading">
+            <p class="eyebrow">Local-first trust</p>
+            <h2 id="trust-title">Your repositories stay under your control</h2>
+          </div>
+          <div class="trust-grid">
+            <article>
+              <h3>Runs on your machine</h3>
+              <p>GitFolio reads repositories you already cloned and exports to a path you choose.</p>
+            </article>
+            <article>
+              <h3>No cloud account required</h3>
+              <p>The workflow is a focused desktop utility, not another hosted workspace.</p>
+            </article>
+            <article>
+              <h3>User decides what to share after export</h3>
+              <p>The output is a plain `.md` file you can edit, trim, archive, or attach.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="use-cases" class="content-section" aria-labelledby="use-title">
+          <div class="section-heading">
+            <p class="eyebrow">Use cases</p>
+            <h2 id="use-title">One export, several moments where evidence matters</h2>
+          </div>
+          <div class="use-case-grid">
+            <article>
+              <h3>Resume evidence</h3>
+              <p>Review actual shipped work before rewriting bullets or project summaries.</p>
+            </article>
+            <article>
+              <h3>Interview prep</h3>
+              <p>Refresh implementation details, tradeoffs, and examples from real commits.</p>
+            </article>
+            <article>
+              <h3>Performance reviews</h3>
+              <p>Assemble a contribution packet from a review period across many repositories.</p>
+            </article>
+            <article>
+              <h3>Personal archive</h3>
+              <p>Keep a durable record of what changed, why it mattered, and where it landed.</p>
+            </article>
+          </div>
+        </section>
+
+        <section id="install" class="install-section section-grid" aria-labelledby="install-title">
+          <div>
+            <p class="eyebrow">Install</p>
+            <h2 id="install-title">Download a release or build the desktop app locally</h2>
+            <p>
+              Use GitHub Releases when a packaged macOS build is available. To build from source,
+              make sure Bun 1.4+ is installed and git must be available on your PATH.
+            </p>
+          </div>
+          <div class="terminal-card" aria-label="Build commands">
+            <div class="terminal-bar">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <pre><code>git clone https://github.com/AungMyoKyaw/GitFolio.git
+cd GitFolio
+bun install
+bun run package</code></pre>
+          </div>
+        </section>
+      </main>
+
+      <footer class="site-footer">
+        <span>GitFolio</span>
+        <span>Local git history to Markdown proof of work.</span>
+      </footer>
+    </div>
   </body>
 </html>
