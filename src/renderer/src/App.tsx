@@ -172,6 +172,7 @@ export default function App() {
     setExportedCommits(0)
     setExportDuration(null)
     opStartTime.current = null
+    refreshRecentSelections()
   }
 
   const filteredAuthors = authors.filter((author) => {
