@@ -1,6 +1,6 @@
 {
   "name": "gitfolio",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "packageManager": "bun@1.4.0",
   "description": "Git contribution portfolio exporter — scan repos, pick an author, export diffs to markdown",
   "author": "AungMyoKyaw",

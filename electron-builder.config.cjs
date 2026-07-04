@@ -12,6 +12,8 @@ module.exports = {
   icon: 'build/icon.png',
   mac: {
     icon: 'build/icon.icns',
+    identity: '-',
+    hardenedRuntime: false,
     target: [
       {
         target: 'dmg',

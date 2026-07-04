@@ -26,6 +26,8 @@ describe('Electron release pipeline', () => {
     expect(builderConfig).toContain("artifactName: '${productName}-${version}-win-${arch}-portable.${ext}'")
     expect(builderConfig).toContain('AppImage')
     expect(builderConfig).toContain('deb')
+    expect(builderConfig).toContain("identity: '-'")
+    expect(builderConfig).toContain('hardenedRuntime: false')
     expect(builderConfig).toContain("maintainer: 'AungMyoKyaw <AungMyoKyaw@users.noreply.github.com>'")
   })
 
@@ -50,7 +52,6 @@ describe('Electron release pipeline', () => {
     expect(releaseWorkflow).toContain('verify:')
     expect(releaseWorkflow).toContain('needs: verify')
     expect(releaseWorkflow).toContain('bun run test')
-    expect(releaseWorkflow).toContain('CSC_IDENTITY_AUTO_DISCOVERY: false')
     expect(releaseWorkflow).toContain('GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}')
     expect(releaseWorkflow).toContain('release-script: release:mac')
     expect(releaseWorkflow).toContain('release-script: release:win')
