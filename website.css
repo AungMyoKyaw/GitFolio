@@ -3,21 +3,21 @@
 }
 
 :root {
-  --background: #14110f;
-  --surface: #1d1815;
-  --surface-raised: #28211d;
-  --border: #3a302a;
-  --text: #f3eadb;
-  --text-muted: #c4b6a2;
-  --accent: #d9a441;
-  --accent-hover: #e4b65c;
-  --accent-tint: #2d2419;
-  --error: #e0625b;
+  --background: #f8f5f0;
+  --surface: #ffffff;
+  --surface-raised: #f3eee6;
+  --border: #e3dbd0;
+  --text: #1c1814;
+  --text-muted: #6b5f54;
+  --accent: #a56c15;
+  --accent-hover: #b0781d;
+  --accent-tint: #f7f0e3;
+  --error: #c9372d;
   --max-width: 1180px;
   --radius-sm: 4px;
   --radius-md: 6px;
   --radius-lg: 8px;
-  color-scheme: dark;
+  color-scheme: light;
   font-family: "Avenir Next", "Segoe UI", system-ui, sans-serif;
   line-height: 1.5;
   letter-spacing: 0;
@@ -30,7 +30,7 @@ html {
 body {
   margin: 0;
   background:
-    linear-gradient(180deg, rgba(217, 164, 65, 0.07), transparent 420px),
+    linear-gradient(180deg, rgba(181, 130, 52, 0.08), transparent 420px),
     var(--background);
   color: var(--text);
 }
@@ -87,7 +87,7 @@ pre {
   width: 34px;
   height: 34px;
   place-items: center;
-  border: 1px solid rgba(217, 164, 65, 0.42);
+  border: 1px solid rgba(165, 108, 21, 0.35);
   border-radius: var(--radius-md);
   background: var(--accent-tint);
   color: var(--accent);
@@ -209,7 +209,7 @@ p {
 }
 
 .btn-secondary:hover {
-  border-color: rgba(217, 164, 65, 0.44);
+  border-color: rgba(165, 108, 21, 0.44);
 }
 
 .hero-facts {
@@ -256,7 +256,7 @@ p {
 
 .product-frame {
   overflow: hidden;
-  box-shadow: 0 26px 70px rgba(0, 0, 0, 0.32);
+  box-shadow: 0 26px 70px rgba(28, 24, 20, 0.12);
 }
 
 .product-frame-primary {
@@ -277,8 +277,8 @@ p {
   bottom: 0;
   width: min(420px, 76%);
   padding: 18px;
-  background: rgba(20, 17, 15, 0.94);
-  box-shadow: 0 18px 56px rgba(0, 0, 0, 0.4);
+  background: var(--surface);
+  box-shadow: 0 18px 56px rgba(28, 24, 20, 0.14);
 }
 
 .preview-label {
@@ -377,7 +377,7 @@ p {
 .output-card {
   padding: 22px;
   background:
-    linear-gradient(180deg, rgba(217, 164, 65, 0.08), transparent),
+    linear-gradient(180deg, rgba(181, 130, 52, 0.08), transparent),
     var(--surface);
 }
 
@@ -386,7 +386,7 @@ p {
 }
 
 .output-meta span {
-  border: 1px solid rgba(217, 164, 65, 0.26);
+  border: 1px solid rgba(165, 108, 21, 0.28);
   border-radius: 999px;
   background: var(--accent-tint);
   color: var(--accent);
@@ -431,7 +431,7 @@ p {
 }
 
 .download-card:hover {
-  border-color: rgba(217, 164, 65, 0.44);
+  border-color: rgba(165, 108, 21, 0.44);
   background: var(--surface-raised);
 }
 
@@ -448,7 +448,7 @@ p {
 
 .terminal-card {
   overflow: hidden;
-  background: #0f0d0c;
+  background: var(--surface-raised);
 }
 
 .terminal-bar {
