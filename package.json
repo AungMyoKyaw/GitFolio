@@ -4,8 +4,10 @@
   "packageManager": "bun@1.4.0",
   "description": "Git contribution portfolio exporter — scan repos, pick an author, export diffs to markdown",
   "author": "AungMyoKyaw",
+  "trustedDependencies": ["electron"],
   "main": "./out/main/index.js",
   "scripts": {
+    "postinstall": "node node_modules/electron/install.js",
     "dev": "electron-vite dev",
     "build": "electron-vite build",
     "preview": "electron-vite preview",
