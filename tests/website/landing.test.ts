@@ -46,6 +46,11 @@ describe('product website landing page', () => {
 
   test('includes source build commands and git requirement', () => {
     expect(html).toContain('https://github.com/AungMyoKyaw/GitFolio')
+    expect(html).toContain('https://github.com/AungMyoKyaw/GitFolio/releases/latest')
+    expect(html).toContain('Download latest release')
+    expect(html).toContain('Download for macOS')
+    expect(html).toContain('Download for Windows')
+    expect(html).toContain('Download for Linux')
     expect(html).not.toContain('your-org/gitfolio')
     expect(html).toContain('bun install')
     expect(html).toContain('bun run package')

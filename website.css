@@ -411,6 +411,41 @@ p {
   align-items: center;
 }
 
+.download-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin-top: 24px;
+}
+
+.download-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  padding: 14px 16px;
+  transition: border-color 0.16s ease, background 0.16s ease;
+}
+
+.download-card:hover {
+  border-color: rgba(217, 164, 65, 0.44);
+  background: var(--surface-raised);
+}
+
+.download-card span {
+  color: var(--text);
+  font-weight: 700;
+}
+
+.download-card strong {
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
 .terminal-card {
   overflow: hidden;
   background: #0f0d0c;
@@ -539,6 +574,11 @@ p {
   }
 
   .site-footer {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .download-card {
     align-items: flex-start;
     flex-direction: column;
   }

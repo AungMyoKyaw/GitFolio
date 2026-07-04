@@ -17,8 +17,9 @@ describe('GitHub Pages deployment workflow', () => {
   })
 
   test('publishes only the website files and screenshots instead of the full repo', () => {
-    expect(workflow).toContain('mkdir -p _site/docs/screenshots')
+    expect(workflow).toContain('mkdir -p _site/docs/screenshots _site/build')
     expect(workflow).toContain('cp index.html website.css .nojekyll _site/')
+    expect(workflow).toContain('cp build/icon.svg _site/build/icon.svg')
     expect(workflow).toContain('cp docs/screenshots/*.png _site/docs/screenshots/')
     expect(workflow).toContain('path: _site')
   })
