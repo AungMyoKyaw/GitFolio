@@ -11,6 +11,8 @@ declare global {
       onProgress: (callback: (event: ProgressEvent) => void) => () => void
       getRecentSelections: () => Promise<RecentSelection[]>
       saveRecentSelection: (selection: RecentSelection) => Promise<void>
+      removeRecentSelection: (folderPath: string) => Promise<void>
+      clearRecentSelections: () => Promise<void>
       openFile: (path: string) => Promise<void>
       showInFolder: (path: string) => Promise<void>
     }

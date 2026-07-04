@@ -475,6 +475,32 @@ code {
   gap: 12px;
 }
 
+.recent-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.recent-clear {
+  font-size: 12px;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  border-radius: var(--radius-sm);
+}
+
+.recent-clear:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+}
+
+.recent-clear:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
 .recent-list {
   list-style: none;
   display: flex;
@@ -516,10 +542,44 @@ code {
   white-space: nowrap;
 }
 
+.recent-item-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
 .recent-item-date {
   flex-shrink: 0;
   color: var(--text-muted);
   font-size: 12px;
+}
+
+.recent-item-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  line-height: 1;
+  padding: 0;
+  border-radius: var(--radius-sm);
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.recent-item-remove:hover {
+  background: var(--surface);
+  color: var(--text-primary);
+}
+
+.recent-item-remove:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
 }
 
 .checklist {

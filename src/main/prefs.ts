@@ -27,6 +27,18 @@ export class PrefsStore {
     this.persist()
   }
 
+  removeRecentSelection(folderPath: string): void {
+    this.data.recentSelections = this.data.recentSelections.filter(
+      (item) => item.folderPath !== folderPath
+    )
+    this.persist()
+  }
+
+  clearRecentSelections(): void {
+    this.data.recentSelections = []
+    this.persist()
+  }
+
   private load(): PrefsData {
     try {
       return JSON.parse(readFileSync(this.filePath, 'utf8')) as PrefsData

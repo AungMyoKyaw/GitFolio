@@ -59,6 +59,20 @@ export default function App() {
     window.api.getRecentSelections().then(setRecentSelections)
   }, [])
 
+  const refreshRecentSelections = async () => {
+    setRecentSelections(await window.api.getRecentSelections())
+  }
+
+  const handleRemoveRecent = async (folderPath: string) => {
+    await window.api.removeRecentSelection(folderPath)
+    await refreshRecentSelections()
+  }
+
+  const handleClearRecent = async () => {
+    await window.api.clearRecentSelections()
+    await refreshRecentSelections()
+  }
+
   useEffect(() => {
     if (phase !== 'scanning' && phase !== 'exporting') {
       setElapsed(0)
@@ -219,6 +233,8 @@ export default function App() {
               onPick={handlePickFolder}
               recentSelections={recentSelections}
               onPickRecent={(path) => handlePickFolder(path)}
+              onRemoveRecent={handleRemoveRecent}
+              onClearRecent={handleClearRecent}
             />
           )}
           {phase === 'scanning' && (
@@ -353,11 +369,15 @@ function ContextPanel({
 function FolderPickPhase({
   onPick,
   recentSelections,
-  onPickRecent
+  onPickRecent,
+  onRemoveRecent,
+  onClearRecent
 }: {
   onPick: () => void
   recentSelections: RecentSelection[]
   onPickRecent: (path: string) => void
+  onRemoveRecent: (path: string) => void
+  onClearRecent: () => void
 }) {
   const sorted = [...recentSelections].sort((a, b) => b.timestamp - a.timestamp).slice(0, 5)
 
@@ -381,7 +401,19 @@ function FolderPickPhase({
 
       {sorted.length > 0 ? (
         <div className="recent-workspaces surface-card">
-          <span className="eyebrow">Recent Workspaces</span>
+          <div className="recent-header">
+            <span className="eyebrow">Recent Workspaces</span>
+            <button
+              className="recent-clear"
+              onClick={() => {
+                if (confirm('Clear all recent workspaces?')) {
+                  onClearRecent()
+                }
+              }}
+            >
+              Clear all
+            </button>
+          </div>
           <ul className="recent-list">
             {sorted.map((sel) => {
               const name = sel.folderPath.split('/').pop() || sel.folderPath
@@ -396,7 +428,21 @@ function FolderPickPhase({
                     <strong>{name}</strong>
                     <code>{sel.folderPath}</code>
                   </div>
-                  <span className="recent-item-date">{date}</span>
+                  <div className="recent-item-actions">
+                    <span className="recent-item-date">{date}</span>
+                    <button
+                      className="recent-item-remove"
+                      type="button"
+                      title={`Remove ${name}`}
+                      aria-label={`Remove ${name}`}
+                      onClick={(e) => {
+                        e.stopPropagation()
+                        onRemoveRecent(sel.folderPath)
+                      }}
+                    >
+                      ✕
+                    </button>
+                  </div>
                 </li>
               )
             })}

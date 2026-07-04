@@ -12,6 +12,10 @@ const api = {
     ipcRenderer.invoke('prefs:getRecentSelections'),
   saveRecentSelection: (selection: RecentSelection): Promise<void> =>
     ipcRenderer.invoke('prefs:saveRecentSelection', selection),
+  removeRecentSelection: (folderPath: string): Promise<void> =>
+    ipcRenderer.invoke('prefs:removeRecentSelection', folderPath),
+  clearRecentSelections: (): Promise<void> =>
+    ipcRenderer.invoke('prefs:clearRecentSelections'),
   openFile: (path: string): Promise<void> =>
     ipcRenderer.invoke('shell:openFile', path),
   showInFolder: (path: string): Promise<void> =>

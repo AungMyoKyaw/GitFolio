@@ -47,6 +47,14 @@ export function registerIpcHandlers(win: BrowserWindow): void {
     prefs.saveRecentSelection(selection)
   })
 
+  ipcMain.handle('prefs:removeRecentSelection', (_, folderPath: string) => {
+    prefs.removeRecentSelection(folderPath)
+  })
+
+  ipcMain.handle('prefs:clearRecentSelections', () => {
+    prefs.clearRecentSelections()
+  })
+
   ipcMain.handle('shell:openFile', (_, path: string) => shell.openPath(path))
 
   ipcMain.handle('shell:showInFolder', (_, path: string) => {
