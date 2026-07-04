@@ -4,9 +4,15 @@ Turn a folder of cloned git repositories into a single Markdown contribution por
 
 Ever looked back at a year of commits and wondered, "what did I actually work on?" GitFolio scans your local repos, lets you pick one or more author identities, and exports every matching commit — with diffs — into one readable `.md` file. Useful for resumes, performance reviews, portfolio building, or just remembering what you shipped.
 
-> **Screenshot placeholder**
-> ![GitFolio screenshot](docs/screenshot.png)
-> _Replace `docs/screenshot.png` with an actual screenshot before making the repo fully public._
+## Screenshots
+
+| Pick a folder | Scan repositories | Select authors |
+|---|---|---|
+| ![Pick folder](docs/screenshots/01-pick-folder.png) | ![Scan repositories](docs/screenshots/02-scan-repositories.png) | ![Select authors](docs/screenshots/03-select-authors.png) |
+
+| Export Markdown | Complete |
+|---|---|
+| ![Export Markdown](docs/screenshots/04-export-markdown.png) | ![Complete](docs/screenshots/05-complete.png) |
 
 ---
 
