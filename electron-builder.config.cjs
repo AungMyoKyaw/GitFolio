@@ -37,8 +37,15 @@ module.exports = {
       }
     ]
   },
+  nsis: {
+    artifactName: '${productName}-${version}-win-${arch}-setup.${ext}'
+  },
+  portable: {
+    artifactName: '${productName}-${version}-win-${arch}-portable.${ext}'
+  },
   linux: {
     icon: 'build/icon.png',
+    maintainer: 'AungMyoKyaw <AungMyoKyaw@users.noreply.github.com>',
     target: [
       {
         target: 'AppImage',

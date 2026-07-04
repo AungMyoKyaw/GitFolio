@@ -22,8 +22,11 @@ describe('Electron release pipeline', () => {
     expect(builderConfig).toContain('zip')
     expect(builderConfig).toContain('nsis')
     expect(builderConfig).toContain('portable')
+    expect(builderConfig).toContain("artifactName: '${productName}-${version}-win-${arch}-setup.${ext}'")
+    expect(builderConfig).toContain("artifactName: '${productName}-${version}-win-${arch}-portable.${ext}'")
     expect(builderConfig).toContain('AppImage')
     expect(builderConfig).toContain('deb')
+    expect(builderConfig).toContain("maintainer: 'AungMyoKyaw <AungMyoKyaw@users.noreply.github.com>'")
   })
 
   test('adds platform packaging scripts for local and CI use', () => {
