@@ -42,7 +42,7 @@ describe('Electron release pipeline', () => {
     expect(releaseWorkflow).toContain('contents: write')
     expect(releaseWorkflow).toContain('node-version: lts/*')
     expect(releaseWorkflow).toContain('oven-sh/setup-bun@v2')
-    expect(releaseWorkflow).toContain('bun-version: latest')
+    expect(releaseWorkflow).toContain('bun-version: canary')
     expect(releaseWorkflow).toContain('bun install --frozen-lockfile')
     expect(releaseWorkflow).toContain('CSC_IDENTITY_AUTO_DISCOVERY: false')
     expect(releaseWorkflow).toContain('GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}')
