@@ -34,6 +34,15 @@ Ever looked back at a year of commits and wondered, "what did I actually work on
 
 Grab the latest `.dmg` (macOS) or `.zip` from [GitHub Releases](../../releases) and install it like any desktop app.
 
+### macOS via Homebrew
+
+```bash
+brew tap AungMyoKyaw/homebrew-tap
+brew install --cask gitfolio
+```
+
+The cask automatically removes the Gatekeeper quarantine so the app opens without warnings.
+
 ### Build from source
 
 Requires [Bun](https://bun.sh) 1.4+ and `git` on your PATH.
